@@ -1,6 +1,6 @@
 ## Important: Client Firewall Rules Update to Microsoft Container Registry (MCR)
 
-To provide a consistent FQDNs, on **March 3, 2020** the data endpoint will be changing from *.cdn.mscr.io to *.data.microsoft.com.
+To provide a consistent FQDNs, the data endpoint will be changing from *.cdn.mscr.io to *.data.mcr.microsoft.com
 
 For more info, see [MCR Client Firewall Rules](https://aka.ms/mcr/firewallrules).
 ---------------------------------------------------------------------------------
@@ -49,37 +49,34 @@ Tags | Dockerfile | OS Version
 -----------| -------------| -------------
 3.1.3-buster-slim, 3.1-buster-slim, 3.1.3, 3.1 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/buster-slim/amd64/Dockerfile) | Debian 10
 3.1.3-alpine3.11, 3.1-alpine3.11, 3.1.3-alpine, 3.1-alpine | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/alpine3.11/amd64/Dockerfile) | Alpine 3.11
-3.1.3-alpine3.10, 3.1-alpine3.10 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/alpine3.10/amd64/Dockerfile) | Alpine 3.10
 3.1.3-focal, 3.1-focal | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/focal/amd64/Dockerfile) | Ubuntu 20.04
 3.1.3-bionic, 3.1-bionic | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/bionic/amd64/Dockerfile) | Ubuntu 18.04
 2.1.17-stretch-slim, 2.1-stretch-slim, 2.1.17, 2.1 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/2.1/runtime-deps/stretch-slim/amd64/Dockerfile) | Debian 9
 2.1.17-alpine3.11, 2.1-alpine3.11, 2.1.17-alpine, 2.1-alpine | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/2.1/runtime-deps/alpine3.11/amd64/Dockerfile) | Alpine 3.11
-2.1.17-alpine3.10, 2.1-alpine3.10 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/2.1/runtime-deps/alpine3.10/amd64/Dockerfile) | Alpine 3.10
 2.1.17-focal, 2.1-focal | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/2.1/runtime-deps/focal/amd64/Dockerfile) | Ubuntu 20.04
 2.1.17-bionic, 2.1-bionic | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/2.1/runtime-deps/bionic/amd64/Dockerfile) | Ubuntu 18.04
 
 ##### .NET Core 5.0 Preview Tags
 Tags | Dockerfile | OS Version
 -----------| -------------| -------------
-5.0.0-preview-buster-slim, 5.0-buster-slim, 5.0.0-preview, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/buster-slim/amd64/Dockerfile) | Debian 10
-5.0.0-preview-alpine3.11, 5.0-alpine3.11, 5.0.0-preview-alpine, 5.0-alpine | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/alpine3.11/amd64/Dockerfile) | Alpine 3.11
-5.0.0-preview-focal, 5.0-focal | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/focal/amd64/Dockerfile) | Ubuntu 20.04
+5.0.0-preview.4-buster-slim, 5.0-buster-slim, 5.0.0-preview.4, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/buster-slim/amd64/Dockerfile) | Debian 10
+5.0.0-preview.4-alpine3.11, 5.0-alpine3.11, 5.0.0-preview.4-alpine, 5.0-alpine | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/alpine3.11/amd64/Dockerfile) | Alpine 3.11
+5.0.0-preview.4-focal, 5.0-focal | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/focal/amd64/Dockerfile) | Ubuntu 20.04
 
 ## Linux arm64 Tags
 Tags | Dockerfile | OS Version
 -----------| -------------| -------------
 3.1.3-buster-slim-arm64v8, 3.1-buster-slim-arm64v8, 3.1.3, 3.1 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/buster-slim/arm64v8/Dockerfile) | Debian 10
 3.1.3-alpine3.11-arm64v8, 3.1-alpine3.11-arm64v8, 3.1.3-alpine-arm64v8, 3.1-alpine-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/alpine3.11/arm64v8/Dockerfile) | Alpine 3.11
-3.1.3-alpine3.10-arm64v8, 3.1-alpine3.10-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/alpine3.10/arm64v8/Dockerfile) | Alpine 3.10
 3.1.3-focal-arm64v8, 3.1-focal-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/focal/arm64v8/Dockerfile) | Ubuntu 20.04
 3.1.3-bionic-arm64v8, 3.1-bionic-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/3.1/runtime-deps/bionic/arm64v8/Dockerfile) | Ubuntu 18.04
 
 ##### .NET Core 5.0 Preview Tags
 Tags | Dockerfile | OS Version
 -----------| -------------| -------------
-5.0.0-preview-buster-slim-arm64v8, 5.0-buster-slim-arm64v8, 5.0.0-preview, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/buster-slim/arm64v8/Dockerfile) | Debian 10
-5.0.0-preview-alpine3.11-arm64v8, 5.0-alpine3.11-arm64v8, 5.0.0-preview-alpine-arm64v8, 5.0-alpine-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/alpine3.11/arm64v8/Dockerfile) | Alpine 3.11
-5.0.0-preview-focal-arm64v8, 5.0-focal-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/focal/arm64v8/Dockerfile) | Ubuntu 20.04
+5.0.0-preview.4-buster-slim-arm64v8, 5.0-buster-slim-arm64v8, 5.0.0-preview.4, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/buster-slim/arm64v8/Dockerfile) | Debian 10
+5.0.0-preview.4-alpine3.11-arm64v8, 5.0-alpine3.11-arm64v8, 5.0.0-preview.4-alpine-arm64v8, 5.0-alpine-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/alpine3.11/arm64v8/Dockerfile) | Alpine 3.11
+5.0.0-preview.4-focal-arm64v8, 5.0-focal-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/focal/arm64v8/Dockerfile) | Ubuntu 20.04
 
 ## Linux arm32 Tags
 Tags | Dockerfile | OS Version
@@ -92,7 +89,7 @@ Tags | Dockerfile | OS Version
 ##### .NET Core 5.0 Preview Tags
 Tags | Dockerfile | OS Version
 -----------| -------------| -------------
-5.0.0-preview-buster-slim-arm32v7, 5.0-buster-slim-arm32v7, 5.0.0-preview, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/buster-slim/arm32v7/Dockerfile) | Debian 10
+5.0.0-preview.4-buster-slim-arm32v7, 5.0-buster-slim-arm32v7, 5.0.0-preview.4, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/5.0/runtime-deps/buster-slim/arm32v7/Dockerfile) | Debian 10
 
 You can retrieve a list of all available tags for dotnet/core-nightly/runtime-deps at https://mcr.microsoft.com/v2/dotnet/core-nightly/runtime-deps/tags/list.
 

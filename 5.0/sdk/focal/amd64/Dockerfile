@@ -1,8 +1,12 @@
-FROM buildpack-deps:focal-scm
+ARG REPO=mcr.microsoft.com/dotnet/core/aspnet
+FROM $REPO:5.0-focal
 
 ENV \
+    # Unset ASPNETCORE_URLS from aspnet base image
+    ASPNETCORE_URLS= \
     # Enable detection of running in a container
     DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_SDK_VERSION=5.0.100-preview.4.20229.10 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance
@@ -13,31 +17,33 @@ ENV \
 # Install .NET CLI dependencies
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
         libc6 \
         libgcc1 \
         libgssapi-krb5-2 \
         libicu66 \
         libssl1.1 \
         libstdc++6 \
+        wget \
         zlib1g \
     && rm -rf /var/lib/apt/lists/*
 
 # Install .NET Core SDK
-RUN dotnet_sdk_version=5.0.100-preview.2.20175.2 \
-    && curl -SL --output dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Sdk/$dotnet_sdk_version/dotnet-sdk-$dotnet_sdk_version-linux-x64.tar.gz \
-    && dotnet_sha512='6598f8f134bb9234277f799beafba47f841715ac11377701a1baeb8a7e8dea5a650a2e6051744b92b9d28386dc9a67b5f488f28ef0d11729cd7d0fc52807bde5' \
+RUN curl -SL --output dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz \
+    && dotnet_sha512='1aafe78a5d34174af388ec802796231f2ebb7c0d6ac2e7c0a1136e30c45adf82532b3275d1f0268a5334e5e36191f8d0c32a7b1d3c6cd697d1d0128733ba3ffd' \
     && echo "$dotnet_sha512 dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
-    && tar -ozxf dotnet.tar.gz -C /usr/share/dotnet \
+    && tar -C /usr/share/dotnet -oxzf dotnet.tar.gz ./packs ./sdk ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
     && rm dotnet.tar.gz \
-    && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet \
     # Trigger first run experience by running arbitrary cmd
     && dotnet help
 
 # Install PowerShell global tool
-RUN powershell_version=7.0.0 \
+RUN powershell_version=7.1.0-preview.2 \
     && curl -SL --output PowerShell.Linux.x64.$powershell_version.nupkg https://pwshtool.blob.core.windows.net/tool/$powershell_version/PowerShell.Linux.x64.$powershell_version.nupkg \
-    && powershell_sha512='a475bb4f5060607b74c0db2732858fc151802a1c44b900608a580a9ebc10930847ade2f9e7987fb45cfe732a15d88b0dbdb13157ac6f4215f82e1fd28e051339' \
+    && powershell_sha512='3807d87e365c4006c55543da69a6ea62e8b243916940528db20aaad64a41c002c1a1e7a8092cae3dfccbe18f4ae8d496c8977f082387bb161f535e274504971a' \
     && echo "$powershell_sha512  PowerShell.Linux.x64.$powershell_version.nupkg" | sha512sum -c - \
     && mkdir -p /usr/share/powershell \
     && dotnet tool install --add-source / --tool-path /usr/share/powershell --version $powershell_version PowerShell.Linux.x64 \
