@@ -1,20 +1,18 @@
-# TODO: define a shared base stage (build infra doesn't support)
+# TODO: Potentially define a shared crossgen2 base stage for build optimization (build infra doesn't support)
 ARG REPO=mcr.microsoft.com/dotnet/core/runtime-deps
-
+ARG DOTNET_VERSION=5.0.0-preview.5.20230.9
 
 # Installer image
 FROM $REPO:5.0-alpine3.11 as installer
-
-ENV DOTNET_VERSION 5.0.0-preview.5.20230.9
+ARG DOTNET_VERSION
 
 # Install crossgen2
-RUN wget -O crossgen2.tar.gz https://dotnetbinaries.blob.core.windows.net/dockerassets/microsoft.netcore.app.crossgen2.linux-musl-x64.$DOTNET_VERSION.tar.gz \
-    && crossgen2_sha512='6beecdd14e52d48b8e794b73dab4b148a50744c1a50f1108c1c30bc1df20fb2cd1741359e7a3f3803e8576ef166308b0d558a18ea6456b343586056025b63e1c' \
+RUN wget -O crossgen2.tar.gz https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_VERSION/dotnet-crossgen2-$DOTNET_VERSION-linux-musl-x64.tar.gz \
+    && crossgen2_sha512='40fd2f6df13ffd8fb39b546160a1a6b8f96003259ee644395bcbf95adcae70166acfe86407ee7f5c031381b90a84e69aee343c43c317b9323127853354601652' \
     && echo "$crossgen2_sha512  crossgen2.tar.gz" | sha512sum -c - \
     && mkdir /crossgen2 \
     && tar -C /crossgen2 -oxzf crossgen2.tar.gz \
     && rm crossgen2.tar.gz
-
 
 RUN \
     # Retrieve .NET
@@ -26,14 +24,17 @@ RUN \
     && rm dotnet.tar.gz \
     \
     # Crossgen .NET
-    && /crossgen2/crossgen2 \
+    && cp -R /dotnet/ /working-dotnet/ \
+    && /working-dotnet/dotnet /crossgen2/crossgen2.dll \
         --composite --inputbubble -O --Os \
         -o /dotnet/shared/Microsoft.NETCore.App/$DOTNET_VERSION/Microsoft.NETCore.App.SharedFramework.dll \
-        /dotnet/shared/Microsoft.NETCore.App/$DOTNET_VERSION/*.dll
+        /dotnet/shared/Microsoft.NETCore.App/$DOTNET_VERSION/*.dll \
+    && rm -r /working-dotnet
 
 
 # .NET runtime image
 FROM $REPO:5.0-alpine3.11
+ARG DOTNET_VERSION=DOTNET_VERSION
 
 ENV DOTNET_VERSION 5.0.0-preview.5.20230.9
 

@@ -1966,25 +1966,6 @@
           ]
         },
         {
-          "productVersion": "$(5.0-SdkVersion)",
-          "platforms": [
-            {
-              "buildArgs": {
-                "REPO": "$(Repo:aspnet)"
-              },
-              "dockerfile": "5.0/sdk/alpine3.11/amd64/aspnet-base",
-              "os": "linux",
-              "osVersion": "alpine3.11",
-              "tags": {
-                "$(5.0-SdkVersion)-alpine3.11-aspnet-base": {},
-                "5.0-alpine3.11-aspnet-base": {},
-                "$(5.0-SdkVersion)-alpine-aspnet-base": {},
-                "5.0-alpine-aspnet-base": {}
-              }
-            }
-          ]
-        },
-        {
           "platforms": [
             {
               "buildArgs": {

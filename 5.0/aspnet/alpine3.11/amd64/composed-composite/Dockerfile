@@ -1,19 +1,18 @@
 # TODO: define a shared base stage (build infra doesn't support)
 ARG REPO=mcr.microsoft.com/dotnet/core/runtime
-
+ARG ASPNET_VERSION=5.0.0-preview.5.20228.19
 
 # Installer image
 FROM $REPO:5.0-alpine3.11-composite as installer
+ARG ASPNET_VERSION
 
 # Install crossgen2
-RUN wget -O crossgen2.tar.gz https://dotnetbinaries.blob.core.windows.net/dockerassets/microsoft.netcore.app.crossgen2.linux-musl-x64.$DOTNET_VERSION.tar.gz \
-    && crossgen2_sha512='6beecdd14e52d48b8e794b73dab4b148a50744c1a50f1108c1c30bc1df20fb2cd1741359e7a3f3803e8576ef166308b0d558a18ea6456b343586056025b63e1c' \
+RUN wget -O crossgen2.tar.gz https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_VERSION/dotnet-crossgen2-$DOTNET_VERSION-linux-musl-x64.tar.gz \
+    && crossgen2_sha512='40fd2f6df13ffd8fb39b546160a1a6b8f96003259ee644395bcbf95adcae70166acfe86407ee7f5c031381b90a84e69aee343c43c317b9323127853354601652' \
     && echo "$crossgen2_sha512  crossgen2.tar.gz" | sha512sum -c - \
     && mkdir /crossgen2 \
     && tar -C /crossgen2 -oxzf crossgen2.tar.gz \
     && rm crossgen2.tar.gz
-
-ENV ASPNET_VERSION 5.0.0-preview.5.20228.19
 
 RUN \
     # Retrieve ASP.NET
@@ -24,7 +23,7 @@ RUN \
     && rm aspnetcore.tar.gz \
     \
     # Crossgen .NET Core
-    && /crossgen2/crossgen2 \
+    && dotnet /crossgen2/crossgen2.dll \
         --composite --inputbubble -O --Os \
         -r /usr/share/dotnet/shared/Microsoft.NETCore.App/$DOTNET_VERSION/*.dll \
         -o /usr/share/dotnet/shared/Microsoft.AspNetCore.App/$ASPNET_VERSION/Microsoft.AspNetCore.App.SharedFramework.dll \
@@ -33,7 +32,8 @@ RUN \
 
 # ASP.NET Core image
 FROM $REPO:5.0-alpine3.11-composite
+ARG ASPNET_VERSION
 
-ENV ASPNET_VERSION 5.0.0-preview.5.20228.19
+ENV ASPNET_VERSION $ASPNET_VERSION
 
 COPY --from=installer ["/usr/share/dotnet/shared/Microsoft.AspNetCore.App", "/usr/share/dotnet/shared/Microsoft.AspNetCore.App"]
