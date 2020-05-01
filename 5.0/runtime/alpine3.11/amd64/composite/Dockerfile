@@ -5,7 +5,7 @@ ARG REPO=mcr.microsoft.com/dotnet/core/runtime-deps
 # Installer image
 FROM $REPO:5.0-alpine3.11 as installer
 
-ENV DOTNET_VERSION 5.0.0-preview.2.20160.6
+ENV DOTNET_VERSION 5.0.0-preview.5.20230.9
 
 # Install crossgen2
 RUN wget -O crossgen2.tar.gz https://dotnetbinaries.blob.core.windows.net/dockerassets/microsoft.netcore.app.crossgen2.linux-musl-x64.$DOTNET_VERSION.tar.gz \
@@ -19,7 +19,7 @@ RUN wget -O crossgen2.tar.gz https://dotnetbinaries.blob.core.windows.net/docker
 RUN \
     # Retrieve .NET
     wget -O dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_VERSION/dotnet-runtime-$DOTNET_VERSION-linux-musl-x64.tar.gz \
-    && dotnet_sha512='f8dcf9f498feffbca4b0649086cffd298cd98189b2950c32dd52b07179b7f33e1acfe14ae59a266502a3518089ca55f224e007628d16194f94be7dc419c1b2b4' \
+    && dotnet_sha512='41621dad0f018b3f48c4777594f2ba83dfd438ce77e8a9de85b20d364d30ef110f64a3d8ddd13763a6b1c7775cf66e34eb40760f115b317b8f44c5080576b1fc' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir /dotnet \
     && tar -C /dotnet -oxzf dotnet.tar.gz \
@@ -35,7 +35,7 @@ RUN \
 # .NET runtime image
 FROM $REPO:5.0-alpine3.11
 
-ENV DOTNET_VERSION 5.0.0-preview.2.20160.6
+ENV DOTNET_VERSION 5.0.0-preview.5.20230.9
 
 COPY --from=installer ["/dotnet", "/usr/share/dotnet"]
 RUN ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet

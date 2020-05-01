@@ -13,12 +13,12 @@ RUN wget -O crossgen2.tar.gz https://dotnetbinaries.blob.core.windows.net/docker
     && tar -C /crossgen2 -oxzf crossgen2.tar.gz \
     && rm crossgen2.tar.gz
 
-ENV ASPNET_VERSION 5.0.0-preview.2.20167.3
+ENV ASPNET_VERSION 5.0.0-preview.5.20228.19
 
 RUN \
     # Retrieve ASP.NET
     wget -O aspnetcore.tar.gz https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/$ASPNET_VERSION/aspnetcore-runtime-$ASPNET_VERSION-linux-musl-x64.tar.gz \
-    &&aspnetcore_sha512='029ed32f8a7dfdb258438177b7fd40c187830db35b3d973dec296d8948f99d30a74269c45d31876c9b4533b8d7b6af65dea319299bd9a7081c6881cf026274b4' \
+    && aspnetcore_sha512='1c82a9d03de1ba11878c5ff812cb19c8b5ad9b7270d905f3e3b8be8237eb4cfb2a5fea89d65c60f76ca62f36f04a8d84746dfee955ab80c223e6007d0ca9b608' \
     && echo "$aspnetcore_sha512  aspnetcore.tar.gz" | sha512sum -c - \
     && tar -ozxf aspnetcore.tar.gz -C /usr/share/dotnet ./shared/Microsoft.AspNetCore.App \
     && rm aspnetcore.tar.gz \
@@ -34,6 +34,6 @@ RUN \
 # ASP.NET Core image
 FROM $REPO:5.0-alpine3.11-composite
 
-ENV ASPNET_VERSION 5.0.0-preview.2.20167.3
+ENV ASPNET_VERSION 5.0.0-preview.5.20228.19
 
 COPY --from=installer ["/usr/share/dotnet/shared/Microsoft.AspNetCore.App", "/usr/share/dotnet/shared/Microsoft.AspNetCore.App"]
