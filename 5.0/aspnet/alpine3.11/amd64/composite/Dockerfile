@@ -27,7 +27,7 @@ RUN \
     && tar -C /dotnet -oxzf dotnet.tar.gz \
     && rm dotnet.tar.gz \
     \
-    # Retrieve .NET.NET
+    # Retrieve ASP.NET
     && wget -O aspnetcore.tar.gz https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/$ASPNET_VERSION/aspnetcore-runtime-$ASPNET_VERSION-linux-musl-x64.tar.gz \
     && aspnetcore_sha512='1c82a9d03de1ba11878c5ff812cb19c8b5ad9b7270d905f3e3b8be8237eb4cfb2a5fea89d65c60f76ca62f36f04a8d84746dfee955ab80c223e6007d0ca9b608' \
     && echo "$aspnetcore_sha512  aspnetcore.tar.gz" | sha512sum -c - \
@@ -53,7 +53,7 @@ RUN \
             a=/work/output/`basename ${b}`; \
             test -e ${a} && cp ${a} /dotnet/shared/Microsoft.AspNetCore.App/$ASPNET_VERSION; \
         done \
-    # TODO:  It is odd that this assembly contains both the .NET and ASP.NET runtimes and is copied to Microsoft.NETCore.App
+    # TODO:  It is odd that this assembly contains both the .NET and ASP.NET runtimes yet it is copied to Microsoft.NETCore.App
     && cp /work/output/SharedFramework.dll /dotnet/shared/Microsoft.NETCore.App/$DOTNET_VERSION \
     && rm -r /work
 
