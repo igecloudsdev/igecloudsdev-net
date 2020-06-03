@@ -1,10 +1,13 @@
 # TODO: define a shared base stage (build infra doesn't support)
 ARG REPO=mcr.microsoft.com/dotnet/core/runtime
 ARG ASPNET_VERSION=5.0.0-preview.5.20228.19
+ARG DOTNET_VERSION=5.0.0-preview.5.20278.1
 
 # Installer image
 FROM $REPO:5.0-alpine3.11-composite as installer
 ARG ASPNET_VERSION
+# TODO:  This shouldn't be needed because it gets inheritted from the base image, but the update-dependency tool doesn't know that.
+ARG DOTNET_VERSION
 
 # Install crossgen2
 RUN wget -O crossgen2.tar.gz https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_VERSION/dotnet-crossgen2-$DOTNET_VERSION-linux-musl-x64.tar.gz \

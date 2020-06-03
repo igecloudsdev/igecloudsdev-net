@@ -26,32 +26,54 @@ namespace Dotnet.Docker
 
         private static readonly string s_urlPatternFormat =
             $"(?<{ValueGroupName}>https://dotnetcli.azureedge.net/[^;\\s]*{{0}})";
-        private static readonly string s_productUrlPattern = string.Format(s_urlPatternFormat, string.Empty);
+        private static readonly string s_runtimeUrlPattern = string.Format(s_urlPatternFormat, "[^;\\s]*-runtime-[^;\\s]*");
+        private static readonly string s_aspNetUrlPattern = string.Format(s_urlPatternFormat, "[^;\\s]*aspnetcore-[^;\\s]*");
+        private static readonly string s_sdkUrlPattern = string.Format(s_urlPatternFormat, "[^;\\s]*-sdk-[^;\\s]*");
+        private static readonly string s_crossgenUrlPattern = string.Format(s_urlPatternFormat, "[^;\\s]*-crossgen2-[^;\\s]*");
         private static readonly string s_lzmaUrlPattern = string.Format(s_urlPatternFormat, "lzma");
         private static readonly string s_shaPatternFormat = $"[ \\$]({{0}})sha512( )*=( )*'(?<{ValueGroupName}>[^'\\s]*)'";
-        private static readonly string s_productShaPattern = string.Format(s_shaPatternFormat, "dotnet_|aspnetcore_|crossgen2_");
+        private static readonly string s_runtimeShaPattern = string.Format(s_shaPatternFormat, "dotnet_");
+        private static readonly string s_aspNetShaPattern = string.Format(s_shaPatternFormat, "aspnetcore_");
+        private static readonly string s_sdkShaPattern = string.Format(s_shaPatternFormat, "dotnet_");
+        private static readonly string s_crossgenShaPattern = string.Format(s_shaPatternFormat, "crossgen2_");
         private static readonly string s_lzmaShaPattern = string.Format(s_shaPatternFormat, "lzma_");
 
-        private static readonly Regex s_productDownloadUrlRegex = new Regex(s_productUrlPattern);
+        private static readonly Regex s_runtimeDownloadUrlRegex = new Regex(s_runtimeUrlPattern);
+        private static readonly Regex s_aspNetDownloadUrlRegex = new Regex(s_aspNetUrlPattern);
+        private static readonly Regex s_sdkDownloadUrlRegex = new Regex(s_sdkUrlPattern);
+        private static readonly Regex s_crossgenDownloadUrlRegex = new Regex(s_crossgenUrlPattern);
         private static readonly Regex s_lzmaDownloadUrlRegex = new Regex(s_lzmaUrlPattern);
-        private static readonly Regex s_productShaRegex = new Regex(s_productShaPattern);
+        private static readonly Regex s_runtimeShaRegex = new Regex(s_runtimeShaPattern);
+        private static readonly Regex s_aspNetShaRegex = new Regex(s_aspNetShaPattern);
+        private static readonly Regex s_sdkShaRegex = new Regex(s_sdkShaPattern);
+        private static readonly Regex s_crossgenShaRegex = new Regex(s_crossgenShaPattern);
         private static readonly Regex s_lzmaShaRegex = new Regex(s_lzmaShaPattern);
-        private static readonly Regex s_versionRegex = VariableHelper.GetValueRegex(
+        private static readonly Regex s_aspNetVersionRegex = VariableHelper.GetValueRegex(
             VariableHelper.AspNetVersionName,
-            VariableHelper.AspNetCoreVersionName,
-            VariableHelper.DotnetSdkVersionName,
+            VariableHelper.AspNetCoreVersionName);
+        private static readonly Regex s_runtimeVersionRegex = VariableHelper.GetValueRegex(
             VariableHelper.DotnetVersionName);
+        private static readonly Regex s_sdkVersionRegex = VariableHelper.GetValueRegex(
+            VariableHelper.DotnetSdkVersionName);
+        private static readonly Regex s_versionRegex = VariableHelper.GetValueRegex(
+    VariableHelper.AspNetVersionName,
+    VariableHelper.AspNetCoreVersionName,
+    VariableHelper.DotnetSdkVersionName,
+    VariableHelper.DotnetVersionName);
 
         private static readonly Dictionary<string, string> s_shaCache = new Dictionary<string, string>();
         private static readonly Dictionary<string, Dictionary<string, string>> s_releaseChecksumCache =
             new Dictionary<string, Dictionary<string, string>>();
 
         private Regex _downloadUrlRegex;
+        private Regex _versionRegex;
+
         private readonly Options _options;
 
-        private DockerfileShaUpdater(string dockerfilePath, Regex regex, Regex downloadUrlRegex, Options options) : base()
+        private DockerfileShaUpdater(string dockerfilePath, Regex regex, Regex downloadUrlRegex, Regex versionRegex, Options options) : base()
         {
             _downloadUrlRegex = downloadUrlRegex;
+            _versionRegex = versionRegex;
             _options = options;
             Path = dockerfilePath;
             Regex = regex;
@@ -62,11 +84,20 @@ namespace Dotnet.Docker
             SkipIfNoReplacementFound = true;
         }
 
-        public static DockerfileShaUpdater CreateProductShaUpdater(string dockerfilePath, Options options) =>
-            new DockerfileShaUpdater(dockerfilePath, s_productShaRegex, s_productDownloadUrlRegex, options);
+        public static DockerfileShaUpdater CreateRuntimeShaUpdater(string dockerfilePath, Options options) =>
+            new DockerfileShaUpdater(dockerfilePath, s_runtimeShaRegex, s_runtimeDownloadUrlRegex, s_runtimeVersionRegex, options);
+
+        public static DockerfileShaUpdater CreateAspNetShaUpdater(string dockerfilePath, Options options) =>
+            new DockerfileShaUpdater(dockerfilePath, s_aspNetShaRegex, s_aspNetDownloadUrlRegex, s_aspNetVersionRegex, options);
+        
+        public static DockerfileShaUpdater CreateSdkShaUpdater(string dockerfilePath, Options options) =>
+            new DockerfileShaUpdater(dockerfilePath, s_sdkShaRegex, s_sdkDownloadUrlRegex, s_sdkVersionRegex, options);
+
+        public static DockerfileShaUpdater CreateCrossgenShaUpdater(string dockerfilePath, Options options) =>
+            new DockerfileShaUpdater(dockerfilePath, s_crossgenShaRegex, s_crossgenDownloadUrlRegex, s_runtimeVersionRegex, options);
 
         public static DockerfileShaUpdater CreateLzmaShaUpdater(string dockerfilePath, Options options) =>
-            new DockerfileShaUpdater(dockerfilePath, s_lzmaShaRegex, s_lzmaDownloadUrlRegex, options);
+            new DockerfileShaUpdater(dockerfilePath, s_lzmaShaRegex, s_lzmaDownloadUrlRegex, s_versionRegex, options);
 
         protected override string TryGetDesiredValue(
             IEnumerable<IDependencyInfo> dependencyBuildInfos, out IEnumerable<IDependencyInfo> usedBuildInfos)
@@ -259,9 +290,9 @@ namespace Dotnet.Docker
             return match.Success;
         }
 
-        private static bool TryGetDotNetVersion(string dockerfile, out (string Value, string Name) versionInfo)
+        private bool TryGetDotNetVersion(string dockerfile, out (string Value, string Name) versionInfo)
         {
-            Match match = s_versionRegex.Match(dockerfile);
+            Match match = _versionRegex.Match(dockerfile);
             versionInfo = match.Success
                 ? (match.Groups[VariableHelper.ValueGroupName].Value, match.Groups[VariableHelper.VariableGroupName].Value)
                 : (null, null);
