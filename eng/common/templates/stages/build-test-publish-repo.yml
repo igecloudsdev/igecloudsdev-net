@@ -7,12 +7,10 @@ parameters:
   linuxAmdBuildJobTimeout: 60
   linuxArmBuildJobTimeout: 60
   windowsAmdBuildJobTimeout: 60
-  windowsArmBuildJobTimeout: 60
 
   linuxAmdTestJobTimeout: 60
   linuxArmTestJobTimeout: 60
   windowsAmdTestJobTimeout: 60
-  windowsArmTestJobTimeout: 60
 
   linuxAmdBuildPool: "Hosted Ubuntu 1604"
   linuxAmdBuildQueue: ""
@@ -90,23 +88,6 @@ stages:
       customInitSteps: ${{ parameters.customBuildInitSteps }}
   - template: ../jobs/build-images.yml
     parameters:
-      name: Windows1809_arm32
-      pool: # Windows1809Arm32Pool
-        ${{ if eq(variables['System.TeamProject'], 'public') }}:
-          name: DotNetCore-Docker-Public
-        ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-          name: DotNetCore-Docker
-        demands:
-        - agent.os -equals linux
-        - RemoteDockerServerOS -equals nanoserver-1809
-        - RemoteDockerServerArch -equals arm32
-      matrix: dependencies.GenerateBuildMatrix.outputs['matrix.Windows1809Arm32']
-      dockerClientOS: linux
-      useRemoteDockerServer: true
-      buildJobTimeout: ${{ parameters.windowsArmBuildJobTimeout }}
-      customInitSteps: ${{ parameters.customBuildInitSteps }}
-  - template: ../jobs/build-images.yml
-    parameters:
       name: Windows1903_amd64
       pool: # windows1903Amd64
         ${{ if eq(variables['System.TeamProject'], 'public') }}:
@@ -158,19 +139,19 @@ stages:
       buildJobTimeout: ${{ parameters.windowsAmdBuildJobTimeout }}
       customInitSteps: ${{ parameters.customBuildInitSteps }}
 
-- ${{ if eq(variables['System.TeamProject'], 'internal') }}:
-  ################################################################################
-  # Post-Build
-  ################################################################################
-  - stage: Post_Build
-    dependsOn: Build
-    condition: and(succeeded(), contains(variables['stages'], 'build'))
-    jobs:
-    - template: ../jobs/post-build.yml
+################################################################################
+# Post-Build
+################################################################################
+- stage: Post_Build
+  dependsOn: Build
+  condition: and(succeeded(), contains(variables['stages'], 'build'))
+  jobs:
+  - template: ../jobs/post-build.yml
 
-  ################################################################################
-  # Test Images
-  ################################################################################
+################################################################################
+# Test Images
+################################################################################
+- ${{ if eq(variables['System.TeamProject'], 'internal') }}:
   - stage: Test
     dependsOn: Post_Build
     condition: "
@@ -226,18 +207,6 @@ stages:
           demands: VSTS_OS -equals Windows_Server_2019_Data_Center_RS5
         matrix: dependencies.GenerateTestMatrix.outputs['matrix.Windows1809Amd64']
         testJobTimeout: ${{ parameters.windowsAmdTestJobTimeout }}
-    - template: ../jobs/test-images-linux-client.yml
-      parameters:
-        name: Windows1809_arm32
-        pool: # Windows1809Arm32Pool
-          name: DotNetCore-Docker
-          demands:
-          - agent.os -equals linux
-          - RemoteDockerServerOS -equals nanoserver-1809
-          - RemoteDockerServerArch -equals arm32
-        matrix: dependencies.GenerateTestMatrix.outputs['matrix.Windows1809Arm32']
-        testJobTimeout: ${{ parameters.windowsArmTestJobTimeout }}
-        useRemoteDockerServer: true
     - template: ../jobs/test-images-windows-client.yml
       parameters:
         name: Windows1903_amd64
@@ -271,40 +240,43 @@ stages:
         matrix: dependencies.GenerateTestMatrix.outputs['matrix.WindowsLtsc2016Amd64']
         testJobTimeout: ${{ parameters.windowsAmdTestJobTimeout }}
 
-  ################################################################################
-  # Publish Images
-  ################################################################################
-  - stage: Publish
+################################################################################
+# Publish Images
+################################################################################
+- stage: Publish
+  ${{ if eq(variables['System.TeamProject'], 'internal') }}:
     dependsOn: Test
-    condition: "
-      and(
-        contains(variables['stages'], 'publish'),
+  ${{ if eq(variables['System.TeamProject'], 'public') }}:
+    dependsOn: Post_Build
+  condition: "
+    and(
+      contains(variables['stages'], 'publish'),
+      or(
         or(
+          and(
+            and(
+              contains(variables['stages'], 'build'),
+              succeeded('Post_Build')),
+            and(
+              contains(variables['stages'], 'test'),
+              succeeded('Test'))),
           or(
             and(
-              and(
-                contains(variables['stages'], 'build'),
-                succeeded('Post_Build')),
+              not(contains(variables['stages'], 'build')),
               and(
                 contains(variables['stages'], 'test'),
                 succeeded('Test'))),
-            or(
+            and(
+              not(contains(variables['stages'], 'test')),
               and(
-                not(contains(variables['stages'], 'build')),
-                and(
-                  contains(variables['stages'], 'test'),
-                  succeeded('Test'))),
-              and(
-                not(contains(variables['stages'], 'test')),
-                and(
-                  contains(variables['stages'], 'build'),
-                  succeeded('Post_Build'))))),
-          not(
-            or(
-              contains(variables['stages'], 'build'),
-              contains(variables['stages'], 'test')))))"
-    jobs:
-    - template: ../jobs/publish.yml
-      parameters:
-        pool: # linuxAmd64Pool
-          name: Hosted Ubuntu 1604
+                contains(variables['stages'], 'build'),
+                succeeded('Post_Build'))))),
+        not(
+          or(
+            contains(variables['stages'], 'build'),
+            contains(variables['stages'], 'test')))))"
+  jobs:
+  - template: ../jobs/publish.yml
+    parameters:
+      pool: # linuxAmd64Pool
+        name: Hosted Ubuntu 1604

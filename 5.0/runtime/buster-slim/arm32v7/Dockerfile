@@ -1,5 +1,5 @@
 ARG REPO=mcr.microsoft.com/dotnet/core/runtime-deps
-ARG DOTNET_VERSION=5.0.0-preview.5.20230.9
+ARG DOTNET_VERSION=5.0.0-preview.5.20278.1
 
 # Installer image
 FROM arm32v7/buildpack-deps:buster-curl as installer
@@ -7,7 +7,7 @@ ARG DOTNET_VERSION
 
 # Retrieve .NET Core
 RUN curl -SL --output dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_VERSION/dotnet-runtime-$DOTNET_VERSION-linux-arm.tar.gz \
-    && dotnet_sha512='9775de2b011d45b1d9b5f9929f16d2c30622eb7dd56979757ca9f4c90a2a588e80142fe4de60e1e9a49530070e823a6492bc4e02cc950fcbc058c682c4799ef8' \
+    && dotnet_sha512='fbe871f82c7c61195fae789af415c2efd03dae982e131c10cacd95b744b0f498774b014bcb3523cf52153104fdad81759f84e2e72bcda7eec48e3530ffb03e60' \
     && echo "$dotnet_sha512 dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /dotnet \
     && tar -ozxf dotnet.tar.gz -C /dotnet \

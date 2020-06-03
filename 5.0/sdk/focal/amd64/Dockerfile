@@ -6,7 +6,7 @@ ENV \
     ASPNETCORE_URLS= \
     # Enable detection of running in a container
     DOTNET_RUNNING_IN_CONTAINER=true \
-    DOTNET_SDK_VERSION=5.0.100-preview.5.20251.1 \
+    DOTNET_SDK_VERSION=5.0.100-preview.5.20279.10 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance
@@ -14,25 +14,16 @@ ENV \
     # PowerShell telemetry for docker image usage
     POWERSHELL_DISTRIBUTION_CHANNEL=PSDocker-DotnetCoreSDK-Ubuntu-20.04
 
-# Install .NET CLI dependencies
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ca-certificates \
         curl \
         git \
-        libc6 \
-        libgcc1 \
-        libgssapi-krb5-2 \
-        libicu66 \
-        libssl1.1 \
-        libstdc++6 \
         wget \
-        zlib1g \
     && rm -rf /var/lib/apt/lists/*
 
 # Install .NET Core SDK
 RUN curl -SL --output dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-x64.tar.gz \
-    && dotnet_sha512='c9e562ad8ad081aa22b202a21166e1dfbf547605e80dfa5fc87d7116ea0f934e4639bc9b8cacc433dbf17ed4feda4dae4b5bde3fe68a46475f2f65a6d168ff3a' \
+    && dotnet_sha512='0ee982dd7b6015d05c04a33ffba77fa9f61863578c5fd7c4b3847043da2fd17c36b2f8535af53f46dee66e9e59a52f5e7c995af7f9a69fbd3abbc524aca5931b' \
     && echo "$dotnet_sha512 dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -C /usr/share/dotnet -oxzf dotnet.tar.gz ./packs ./sdk ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -41,9 +32,9 @@ RUN curl -SL --output dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Sdk/$
     && dotnet help
 
 # Install PowerShell global tool
-RUN powershell_version=7.1.0-preview.2 \
+RUN powershell_version=7.1.0-preview.3 \
     && curl -SL --output PowerShell.Linux.x64.$powershell_version.nupkg https://pwshtool.blob.core.windows.net/tool/$powershell_version/PowerShell.Linux.x64.$powershell_version.nupkg \
-    && powershell_sha512='3807d87e365c4006c55543da69a6ea62e8b243916940528db20aaad64a41c002c1a1e7a8092cae3dfccbe18f4ae8d496c8977f082387bb161f535e274504971a' \
+    && powershell_sha512='081300c985a7a6db5252489f49b657fe0165180c6914352472d9f29cd42f2127906b3692739815f0db19cc1e255b4385f477d43559aedfd7f51c94c3b41e6e4e' \
     && echo "$powershell_sha512  PowerShell.Linux.x64.$powershell_version.nupkg" | sha512sum -c - \
     && mkdir -p /usr/share/powershell \
     && dotnet tool install --add-source / --tool-path /usr/share/powershell --version $powershell_version PowerShell.Linux.x64 \
