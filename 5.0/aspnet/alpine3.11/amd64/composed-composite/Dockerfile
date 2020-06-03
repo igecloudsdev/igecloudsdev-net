@@ -1,6 +1,6 @@
 # TODO: define a shared base stage (build infra doesn't support)
 ARG REPO=mcr.microsoft.com/dotnet/core/runtime
-ARG ASPNET_VERSION=5.0.0-preview.5.20228.19
+ARG ASPNET_VERSION=5.0.0-preview.5.20279.2
 ARG DOTNET_VERSION=5.0.0-preview.5.20278.1
 
 # Installer image
@@ -11,7 +11,7 @@ ARG DOTNET_VERSION
 
 # Install crossgen2
 RUN wget -O crossgen2.tar.gz https://dotnetcli.azureedge.net/dotnet/Runtime/$DOTNET_VERSION/dotnet-crossgen2-$DOTNET_VERSION-linux-musl-x64.tar.gz \
-    && crossgen2_sha512='40fd2f6df13ffd8fb39b546160a1a6b8f96003259ee644395bcbf95adcae70166acfe86407ee7f5c031381b90a84e69aee343c43c317b9323127853354601652' \
+    && crossgen2_sha512='f5d8bfa0eeded2da2065b071b8bfeb718cbb29b4526326c5e9a09cc9b92da1eca0d1b4e1bf85fe297eaeaf6115a17ff76c800cdc6a4fa9125e78b1c42fbf72c1' \
     && echo "$crossgen2_sha512  crossgen2.tar.gz" | sha512sum -c - \
     && mkdir /crossgen2 \
     && tar -C /crossgen2 -oxzf crossgen2.tar.gz \
@@ -20,7 +20,7 @@ RUN wget -O crossgen2.tar.gz https://dotnetcli.azureedge.net/dotnet/Runtime/$DOT
 RUN \
     # Retrieve ASP.NET
     wget -O aspnetcore.tar.gz https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/$ASPNET_VERSION/aspnetcore-runtime-$ASPNET_VERSION-linux-musl-x64.tar.gz \
-    && aspnetcore_sha512='1c82a9d03de1ba11878c5ff812cb19c8b5ad9b7270d905f3e3b8be8237eb4cfb2a5fea89d65c60f76ca62f36f04a8d84746dfee955ab80c223e6007d0ca9b608' \
+    && aspnetcore_sha512='6377ac079540d502902b4ff621638400411f3411839cf711ac49c0f9be63c9eb408febea6e01ef9a81d2c4700263e5d5e57752226f3be0e7980894e9211e2ec3' \
     && echo "$aspnetcore_sha512  aspnetcore.tar.gz" | sha512sum -c - \
     && tar -ozxf aspnetcore.tar.gz -C /usr/share/dotnet ./shared/Microsoft.AspNetCore.App \
     && rm aspnetcore.tar.gz \
