@@ -34,9 +34,9 @@ RUN \
 
 # .NET runtime image
 FROM $REPO:5.0-alpine3.11
-ARG DOTNET_VERSION=DOTNET_VERSION
+ARG DOTNET_VERSION
 
-ENV DOTNET_VERSION 5.0.0-preview.5.20230.9
+ENV DOTNET_VERSION $DOTNET_VERSION
 
 COPY --from=installer ["/dotnet", "/usr/share/dotnet"]
 RUN ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
