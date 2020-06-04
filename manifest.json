@@ -922,14 +922,14 @@
               "buildArgs": {
                 "REPO": "$(Repo:runtime-deps)"
               },
-              "dockerfile": "5.0/runtime/alpine3.11/amd64",
+              "dockerfile": "5.0/runtime/alpine3.11/amd64/no-composite",
               "os": "linux",
               "osVersion": "alpine3.11",
               "tags": {
-                "$(5.0-RuntimeVersion)-alpine3.11": {},
-                "5.0-alpine3.11": {},
-                "$(5.0-RuntimeVersion)-alpine": {},
-                "5.0-alpine": {}
+                "$(5.0-RuntimeVersion)-alpine3.11-no-composite": {},
+                "5.0-alpine3.11-no-composite": {},
+                "$(5.0-RuntimeVersion)-alpine-no-composite": {},
+                "5.0-alpine-no-composite": {}
               }
             }
           ]
@@ -1517,14 +1517,14 @@
               "buildArgs": {
                 "REPO": "$(Repo:runtime)"
               },
-              "dockerfile": "5.0/aspnet/alpine3.11/amd64",
+              "dockerfile": "5.0/aspnet/alpine3.11/amd64/no-composite",
               "os": "linux",
               "osVersion": "alpine3.11",
               "tags": {
-                "$(5.0-RuntimeVersion)-alpine3.11": {},
-                "5.0-alpine3.11": {},
-                "$(5.0-RuntimeVersion)-alpine": {},
-                "5.0-alpine": {}
+                "$(5.0-RuntimeVersion)-alpine3.11-no-composite": {},
+                "5.0-alpine3.11-no-composite": {},
+                "$(5.0-RuntimeVersion)-alpine-no-composite": {},
+                "5.0-alpine-no-composite": {}
               }
             }
           ]
@@ -2080,14 +2080,14 @@
               "buildArgs": {
                 "REPO": "$(Repo:aspnet)"
               },
-              "dockerfile": "5.0/sdk/alpine3.11/amd64",
+              "dockerfile": "5.0/sdk/alpine3.11/amd64/no-composite",
               "os": "linux",
               "osVersion": "alpine3.11",
               "tags": {
-                "$(5.0-SdkVersion)-alpine3.11": {},
-                "5.0-alpine3.11": {},
-                "$(5.0-SdkVersion)-alpine": {},
-                "5.0-alpine": {}
+                "$(5.0-SdkVersion)-alpine3.11-no-composite": {},
+                "5.0-alpine3.11-no-composite": {},
+                "$(5.0-SdkVersion)-alpine-no-composite": {},
+                "5.0-alpine-no-composite": {}
               }
             }
           ]

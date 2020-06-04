@@ -32,7 +32,7 @@ namespace Microsoft.DotNet.Docker.Tests
             new ProductImageData { Version = V3_1, OS = OS.Alpine311,    Arch = Arch.Arm64,   SdkOS = OS.Buster },
             new ProductImageData { Version = V5_0, OS = OS.BusterSlim,   Arch = Arch.Amd64 },
             new ProductImageData { Version = V5_0, OS = OS.Focal,        Arch = Arch.Amd64 },
-            new ProductImageData { Version = V5_0, OS = OS.Alpine311,    Arch = Arch.Amd64 },
+            new ProductImageData { Version = V5_0, OS = OS.Alpine311,    Arch = Arch.Amd64, SdkVariant = "no-composite", AspnetVariant = "no-composite", RuntimeVariant = "no-composite"  },
             new ProductImageData { Version = V5_0, OS = OS.Alpine311,    Arch = Arch.Amd64, SdkVariant = "aspnet-composed-composite", AspnetVariant = "composed-composite", RuntimeVariant = "composite" },
             new ProductImageData { Version = V5_0, OS = OS.Alpine311,    Arch = Arch.Amd64, SdkVariant = "aspnet-composite", AspnetVariant = "composite", RuntimeVariant = "composite" },
             new ProductImageData { Version = V5_0, OS = OS.Alpine311,    Arch = Arch.Amd64, SdkVariant = "runtime-composite", AspnetVariant = "runtime-composite", RuntimeVariant = "composite" },
