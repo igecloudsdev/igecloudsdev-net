@@ -1,101 +1,56 @@
-## Important: Client Firewall Rules Update to Microsoft Container Registry (MCR)
+# Experiment Using CrossGen2 to Produce Smaller Images
 
-To provide a consistent FQDNs, the data endpoint will be changing from *.cdn.mscr.io to *.data.mcr.microsoft.com
+This [branch](https://github.com/dotnet/dotnet-docker/tree/feature/r2r-version-bubbles) contains a set of experiments around using Crossgen2 to produce smaller images.  For additional background reference the primary [issue](https://github.com/dotnet/dotnet-docker/issues/1791) tracking this work.
 
-For more info, see [MCR Client Firewall Rules](https://aka.ms/mcr/firewallrules).
+Because the goal is to produce small images, the experiment focuses only on Alpine images.  Another scoping decision is to only amd64.  Depending on the outcome and success, the scope of the experiment may expand overtime.
 
----------------------------------------------------------------------------------
+## Experiments
 
-The images from the dotnet/nightly repositories include last-known-good (LKG) builds for the next release of [.NET](https://github.com/dotnet/core).
+1. Composite .NET Runtime - With this option, the .NET runtime is crossgen'd to produce a composite ready to run binary within the `runtime` image.  The `aspnet` and `sdk` images build on top of the `runtime` image but their binaries are not crossgen'd.
 
-See [dotnet/core](https://hub.docker.com/_/microsoft-dotnet-core/) for images with official releases of [.NET Core](https://github.com/dotnet/core).
+    **Dockerfiles**
+    * [runtime](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/runtime/alpine3.11/amd64/composite/Dockerfile)
+    * [aspnet](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/aspnet/alpine3.11/amd64/runtime-composite/Dockerfile)
+    * [sdk](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/sdk/alpine3.11/amd64/runtime-composite/Dockerfile)
 
-# Featured Repos
+    **Pros**
+    1. Maintains shared layers across the .NET images.
+    1. Simple implementation with a hopefully noticeable size reduction.
 
-* [dotnet/nightly/sdk](https://hub.docker.com/_/microsoft-dotnet-nightly-sdk/): .NET SDK (Preview)
-* [dotnet/nightly/aspnet](https://hub.docker.com/_/microsoft-dotnet-nightly-aspnet/): ASP.NET Core Runtime (Preview)
-* [dotnet/nightly/runtime](https://hub.docker.com/_/microsoft-dotnet-nightly-runtime/): .NET Runtime (Preview)
-* [dotnet/nightly/runtime-deps](https://hub.docker.com/_/microsoft-dotnet-nightly-runtime-deps/): .NET Runtime Dependencies (Preview)
+    **Cons**
+    1. The `aspnet` image is not as small as it could be with other approaches.
 
-# About .NET
+1. Composite .NET Runtime + Composite ASP.NET Core - This option starts with the Composite .NET Runtime.  The difference is in the `aspnet` image, both the .NET and ASP.NET runtimes are crossgen'd to produce a single composite ready to run binary.  Because of this, the `aspnet` image is based on the `runtime-deps` image.  Basing it on the `runtime` image would be nonsensical and produce a bloated image.  The SDK image is built on top of the ASP.NET image but does not contain additional crossgen'd binaries.
 
-[.NET](https://docs.microsoft.com/dotnet/core/) is a general purpose development platform maintained by Microsoft and the .NET community on [GitHub](https://github.com/dotnet/core). It is cross-platform, supporting Windows, macOS and Linux, and can be used in device, cloud, and embedded/IoT scenarios.
+    **Dockerfiles**
+    * [runtime](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/runtime/alpine3.11/amd64/composite/Dockerfile)
+    * [aspnet](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/aspnet/alpine3.11/amd64/composite/Dockerfile)
+    * [sdk](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/sdk/alpine3.11/amd64/aspnet-composite/Dockerfile)
 
-.NET has several capabilities that make development easier, including automatic memory management, (runtime) generic types, reflection, asynchrony, concurrency, and native interop. Millions of developers take advantage of these capabilities to efficiently build high-quality applications.
+    **Pros**
+    1. Produces the smallest `aspnet` image of the mentioned options.
 
-You can use C# to write .NET apps. C# is simple, powerful, type-safe, and object-oriented while retaining the expressiveness and elegance of C-style languages. Anyone familiar with C and similar languages will find it straightforward to write in C#.
+    **Cons**
+    1. The `runtime` image layers cannot be shared.  This is a disadvantage in scenarios where both the `runtime` and `aspnet` images are used within the same environment.
 
-[.NET](https://github.com/dotnet/core) is open source (MIT and Apache 2 licenses) and was contributed to the [.NET Foundation](http://dotnetfoundation.org) by Microsoft in 2014. It can be freely adopted by individuals and companies, including for personal, academic or commercial purposes. Multiple companies use .NET as part of apps, tools, new platforms and hosting services.
+1. Composite .NET Runtime + Composed Composite ASP.NET Core - This option starts with the Composite .NET Runtime.  The difference is in the `aspnet` image, the ASP.NET runtime is crossgen'd by itself to produce a single composite ready to run binary.  In this scenario there are two composite ready to run binaries in the `aspnet` image layers.  The SDK image is build on top of the ASP.NET image but does not add any addition crossgen'd binaries.
 
-You are invited to [contribute new features](https://github.com/dotnet/core/blob/master/CONTRIBUTING.md), fixes, or updates, large or small; we are always thrilled to receive pull requests, and do our best to process them as fast as we can.
+    **Dockerfiles**
+    * [runtime](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/runtime/alpine3.11/amd64/composite/Dockerfile)
+    * [aspnet](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/aspnet/alpine3.11/amd64/composed-composite/Dockerfile)
+    * [sdk](https://github.com/dotnet/dotnet-docker/blob/feature/r2r-version-bubbles/5.0/sdk/alpine3.11/amd64/aspnet-composed-composite/Dockerfile)
 
-> https://docs.microsoft.com/dotnet/core/
+    **Pros**
+    1. Maintains shared layers across the .NET images.
+    1. Produces a smaller `aspnet` image than the single Composite .NET Runtime approach.
 
-Watch [dotnet/announcements](https://github.com/dotnet/announcements/labels/Docker) for Docker-related .NET announcements.
+    **Cons**
+    1. The `aspnet` image is not as small as it could be with other approaches.
 
-# How to Use the Images
+## Building Images
 
-The [.NET Docker samples](https://github.com/dotnet/dotnet-docker/blob/master/samples/README.md) show various ways to use .NET and Docker together. See [Building Docker Images for .NET Applications](https://docs.microsoft.com/dotnet/core/docker/building-net-docker-images) to learn more.
-
-## Container sample: Run a simple application
-
-You can quickly run a container with a pre-built [.NET Docker image](https://hub.docker.com/_/microsoft-dotnet-core-samples/), based on the [.NET console sample](https://github.com/dotnet/dotnet-docker/blob/master/samples/dotnetapp/README.md).
-
-Type the following command to run a sample console application:
-
-```console
-docker run --rm mcr.microsoft.com/dotnet/core/samples
-```
-
-## Container sample: Run a web application
-
-You can quickly run a container with a pre-built [.NET Docker image](https://hub.docker.com/_/microsoft-dotnet-core-samples/), based on the [ASP.NET Core sample](https://github.com/dotnet/dotnet-docker/blob/master/samples/aspnetapp/README.md).
-
-Type the following command to run a sample web application:
+To build the images locally run the following command.
 
 ```console
-docker run -it --rm -p 8000:80 --name aspnetcore_sample mcr.microsoft.com/dotnet/core/samples:aspnetapp
+dotnet-docker> .\build-and-test.ps1 -Version 5.0 -OS alpine3.11
 ```
-
-After the application starts, navigate to `http://localhost:8000` in your web browser.
-
-See [Hosting ASP.NET Core Images with Docker over HTTPS](https://github.com/dotnet/dotnet-docker/blob/master/samples/host-aspnetcore-https.md) to use HTTPS with this image.
-
-# Related Repos
-
-.NET:
-
-* [dotnet](https://hub.docker.com/_/microsoft-dotnet/): .NET
-* [dotnet/core/samples](https://hub.docker.com/_/microsoft-dotnet-core-samples/): .NET Core Samples
-
-.NET Framework:
-
-* [dotnet/framework](https://hub.docker.com/_/microsoft-dotnet-framework/): .NET Framework, ASP.NET and WCF
-* [dotnet/framework/samples](https://hub.docker.com/_/microsoft-dotnet-framework-samples/): .NET Framework, ASP.NET and WCF Samples
-
-# Support
-
-See [Microsoft Support for .NET](https://github.com/dotnet/core/blob/master/microsoft-support.md) for the support lifecycle.
-
-# Image Update Policy
-
-* We update the supported .NET images within 12 hours of any updates to their base images (e.g. debian:buster-slim, windows/nanoserver:1909, buildpack-deps:bionic-scm, etc.).
-* We publish .NET images as part of releasing new versions of .NET including major/minor and servicing.
-
-# Feedback
-
-* [File a .NET Docker issue](https://github.com/dotnet/dotnet-docker/issues)
-* [File a .NET issue](https://github.com/dotnet/core/issues)
-* [File an ASP.NET Core issue](https://github.com/aspnet/home/issues)
-* [File an issue for other .NET components](https://github.com/dotnet/core/blob/master/Documentation/core-repos.md)
-* [File a Visual Studio Docker Tools issue](https://github.com/microsoft/dockertools/issues)
-* [File a Microsoft Container Registry (MCR) issue](https://github.com/microsoft/containerregistry/issues)
-* [Ask on Stack Overflow](https://stackoverflow.com/questions/tagged/.net-core)
-* [Contact Microsoft Support](https://support.microsoft.com/contactus/)
-
-# License
-
-* [.NET license](https://github.com/dotnet/dotnet-docker/blob/master/LICENSE)
-* [Discover licensing for Linux image contents](https://github.com/dotnet/dotnet-docker/blob/master/documentation/image-artifact-details.md)
-* [Windows Nano Server license](https://hub.docker.com/_/microsoft-windows-nanoserver/) (only applies to Windows containers)
-* [Pricing and licensing for Windows Server 2019](https://www.microsoft.com/cloud-platform/windows-server-pricing)
