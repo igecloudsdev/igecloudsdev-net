@@ -45,24 +45,24 @@ The [.NET Core Docker samples](https://github.com/dotnet/dotnet-docker/blob/mast
 ##### .NET 5.0 Preview Tags
 Tags | Dockerfile | OS Version
 -----------| -------------| -------------
-5.0.0-rc.1-buster-slim, 5.0-buster-slim, 5.0.0-rc.1, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/5.0/buster-slim/amd64/Dockerfile) | Debian 10
-5.0.0-rc.1-alpine3.12, 5.0-alpine3.12, 5.0-alpine | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/5.0/alpine3.12/amd64/Dockerfile) | Alpine 3.12
-5.0.0-rc.1-focal, 5.0-focal | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/5.0/focal/amd64/Dockerfile) | Ubuntu 20.04
+5.0.0-rc.2-buster-slim-amd64, 5.0-buster-slim-amd64, 5.0.0-rc.2, 5.0.0-rc.2-buster-slim, 5.0, 5.0-buster-slim, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/3.1/buster-slim/amd64/Dockerfile) | Debian 10
+5.0.0-rc.2-alpine3.12-amd64, 5.0-alpine3.12-amd64, 5.0-alpine-amd64, 5.0.0-rc.2-alpine3.12, 5.0-alpine3.12, 5.0-alpine | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/3.1/alpine3.12/amd64/Dockerfile) | Alpine 3.12
+5.0.0-rc.2-focal-amd64, 5.0-focal-amd64, 5.0.0-rc.2-focal, 5.0-focal | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/3.1/focal/amd64/Dockerfile) | Ubuntu 20.04
 
 ## Linux arm64 Tags
 ##### .NET 5.0 Preview Tags
 Tags | Dockerfile | OS Version
 -----------| -------------| -------------
-5.0.0-rc.1-buster-slim-arm64v8, 5.0-buster-slim-arm64v8, 5.0.0-rc.1, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/5.0/buster-slim/arm64v8/Dockerfile) | Debian 10
-5.0.0-rc.1-alpine3.12-arm64v8, 5.0-alpine3.12-arm64v8, 5.0-alpine-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/5.0/alpine3.12/arm64v8/Dockerfile) | Alpine 3.12
-5.0.0-rc.1-focal-arm64v8, 5.0-focal-arm64v8 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/5.0/focal/arm64v8/Dockerfile) | Ubuntu 20.04
+5.0.0-rc.2-buster-slim-arm64v8, 5.0-buster-slim-arm64v8, 5.0.0-rc.2, 5.0.0-rc.2-buster-slim, 5.0, 5.0-buster-slim, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/3.1/buster-slim/arm64v8/Dockerfile) | Debian 10
+5.0.0-rc.2-alpine3.12-arm64v8, 5.0-alpine3.12-arm64v8, 5.0-alpine-arm64v8, 5.0.0-rc.2-alpine3.12, 5.0-alpine3.12, 5.0-alpine | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/3.1/alpine3.12/arm64v8/Dockerfile) | Alpine 3.12
+5.0.0-rc.2-focal-arm64v8, 5.0-focal-arm64v8, 5.0.0-rc.2-focal, 5.0-focal | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/3.1/focal/arm64v8/Dockerfile) | Ubuntu 20.04
 
 ## Linux arm32 Tags
 ##### .NET 5.0 Preview Tags
 Tags | Dockerfile | OS Version
 -----------| -------------| -------------
-5.0.0-rc.1-buster-slim-arm32v7, 5.0-buster-slim-arm32v7, 5.0.0-rc.1, 5.0, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/5.0/buster-slim/arm32v7/Dockerfile) | Debian 10
-5.0.0-rc.1-focal-arm32v7, 5.0-focal-arm32v7 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/5.0/focal/arm32v7/Dockerfile) | Ubuntu 20.04
+5.0.0-rc.2-buster-slim-arm32v7, 5.0-buster-slim-arm32v7, 5.0.0-rc.2, 5.0.0-rc.2-buster-slim, 5.0, 5.0-buster-slim, latest | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/3.1/buster-slim/arm32v7/Dockerfile) | Debian 10
+5.0.0-rc.2-focal-arm32v7, 5.0-focal-arm32v7, 5.0.0-rc.2-focal, 5.0-focal | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime-deps/3.1/focal/arm32v7/Dockerfile) | Ubuntu 20.04
 
 You can retrieve a list of all available tags for dotnet/runtime-deps at https://mcr.microsoft.com/v2/dotnet/runtime-deps/tags/list.
 
@@ -77,13 +77,7 @@ See [Microsoft Support for .NET Core](https://github.com/dotnet/core/blob/master
 
 # Feedback
 
-* [File a .NET Core Docker issue](https://github.com/dotnet/dotnet-docker/issues)
-* [File a .NET Core issue](https://github.com/dotnet/core/issues)
-* [File an ASP.NET Core issue](https://github.com/aspnet/home/issues)
-* [File an issue for other .NET components](https://github.com/dotnet/core/blob/master/Documentation/core-repos.md)
-* [File a Visual Studio Docker Tools issue](https://github.com/microsoft/dockertools/issues)
-* [File a Microsoft Container Registry (MCR) issue](https://github.com/microsoft/containerregistry/issues)
-* [Ask on Stack Overflow](https://stackoverflow.com/questions/tagged/.net-core)
+* [File an issue](https://github.com/dotnet/dotnet-docker/issues/new/choose)
 * [Contact Microsoft Support](https://support.microsoft.com/contactus/)
 
 # License
