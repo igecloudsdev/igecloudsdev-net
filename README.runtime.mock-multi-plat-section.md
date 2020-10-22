@@ -43,37 +43,98 @@ docker run --rm mcr.microsoft.com/dotnet/core/samples
 
 # Full Tag Listing
 
-| Tags | OS Version | Arch / Dockerfile | Last Modified
-| -----------| -----------| -------------| -------------
-| 5.0.0, 5.0, latest | Multi-platform | amd64, arm64v8, arm32v7 | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;5.0.0-buster-slim, 5.0-buster-slim | Debian 10 | [amd64](placeholder), [arm64v8](placeholder), [arm32v7](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;5.0.0-nanoserver-2004, 5.0-nanoserver-2004 | Windows Server, version 2004 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;5.0.0-nanoserver-1909, 5.0-nanoserver-1909 | Windows Server, version 1909 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;5.0.0-nanoserver-1903, 5.0-nanoserver-1903 | Windows Server, version 1903 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;5.0.0-nanoserver-1809, 5.0-nanoserver-1809 | Windows Server 2019 | [amd64](placeholder) | 08/20/2020
-| 5.0.0-alpine3.12, 5.0-alpine3.12, 5.0-alpine | Alpine 3.12 | [amd64](placeholder), [arm64v8](placeholder), [arm32v7](placeholder) | 08/20/2020
-| 5.0.0-focal, 5.0-focal | Ubuntu 20.04 | [amd64](placeholder), [arm64v8](placeholder), [arm32v7](placeholder) | 08/20/2020
-| 3.1.7, 3.1 | Multi-platform | amd64, arm64v8, arm32v7 | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;3.1.7-buster-slim, 3.1-buster-slim | Debian 10 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;3.1.7-buster-slim-arm64v8, 3.1-buster-slim-arm64v8 | Debian 10 | [arm64v8](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/buster-slim/arm64v8/Dockerfile) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;3.1.7-buster-slim-arm64v8, 3.1-buster-slim-arm64v8 | Debian 10 | [arm64v8](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/buster-slim/arm64v8/Dockerfile) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;3.1.7-nanoserver-2004, 3.1-nanoserver-2004 | Windows Server, version 2004 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;3.1.7-nanoserver-1909, 3.1-nanoserver-1909 | Windows Server, version 1909 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;3.1.7-nanoserver-1903, 3.1-nanoserver-1903 | Windows Server, version 1903 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;3.1.7-nanoserver-1809, 3.1-nanoserver-1809 | Windows Server 2019 | [amd64](placeholder) | 08/20/2020
-| 3.1.7-alpine3.12, 3.1-alpine3.12, 3.1-alpine | Alpine 3.12 | [amd64](placeholder), [arm64v8](placeholder) | 08/20/2020
-| 3.1.7-focal, 3.1-focal | Ubuntu 20.04 | [amd64](placeholder), [arm64v8](placeholder), [arm32v7](placeholder) | 08/20/2020
-| 3.1.7-bionic, 3.1-bionic | Ubuntu 18.04 | [amd64](placeholder), [arm64v8](placeholder), [arm32v7](placeholder) | 08/20/2020
-| 2.1.21, 2.1 | Multi-platform | amd64, arm32v7 | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;2.1.21-stretch-slim, 2.1-stretch-slim | Debian 9 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;2.1.21-stretch-slim-arm32v7, 2.1-stretch-slim-arm32v7 | Debian 9 | [arm32v7](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/stretch-slim/arm32v7/Dockerfile) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;2.1.21-nanoserver-2004, 2.1-nanoserver-2004 | Windows Server, version 2004 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;2.1.21-nanoserver-1909, 2.1-nanoserver-1909 | Windows Server, version 1909 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;2.1.21-nanoserver-1903, 2.1-nanoserver-1903 | Windows Server, version 1903 | [amd64](placeholder) | 08/20/2020
-| &nbsp;&nbsp;&nbsp;&nbsp;&#8627;&nbsp;&nbsp;&nbsp;2.1.21-nanoserver-1809, 2.1-nanoserver-1809 | Windows Server 2019 | [amd64](placeholder) | 08/20/2020
-| 2.1.21-alpine3.12, 2.1-alpine3.12, 2.1-alpine | Alpine 3.12 | [amd64](placeholder) | 08/20/2020
-| 2.1.21-focal, 2.1-focal | Ubuntu 20.04 | [amd64](placeholder), [arm32v7](placeholder) | 08/20/2020
-| 2.1.21-bionic, 2.1-bionic | Ubuntu 18.04 | [amd64](placeholder), [arm32v7](placeholder) | 08/20/2020
+## Multi-platform Tags
+
+<table>
+    <thead>
+        <tr>
+            <th>Tags</th>
+            <th>OS Version</th>
+            <th>Arch / Dockerfile</th>
+            <th>Last Modified</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan=5 valign="top">5.0.0, 5.0, latest</td>
+            <td >Debian 10</td>
+            <td><a href="placeholder">amd64</a>, <a href="placeholder">arm64v8</a>, <a href="placeholder">arm32v7</a></td>
+            <td rowspan=5 valign="top">08/20/2020</td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 2004</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1909</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1903</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1809</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >5.0.0-alpine3.12, 5.0-alpine3.12, 5.0-alpine</td>
+            <td >Alpine 3.12</td>
+            <td><a href="placeholder">amd64</a>, <a href="placeholder">arm64v8</a></td>
+            <td >08/20/2020</td>
+        </tr>
+        <tr>
+            <td >5.0.0-focal, 5.0-focal</td>
+            <td >Ubuntu 20.04</td>
+            <td><a href="placeholder">amd64</a>, <a href="placeholder">arm64v8</a>, <a href="placeholder">arm32v7</a></td>
+            <td >08/20/2020</td>
+        </tr>
+        <tr>
+            <td rowspan=5 valign="top">3.1.7, 3.1, latest</td>
+            <td >Debian 10</td>
+            <td><a href="placeholder">amd64</a>, <a href="placeholder">arm64v8</a>, <a href="placeholder">arm32v7</a></td>
+            <td rowspan=5 valign="top">08/20/2020</td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 2004</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1909</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1903</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1809</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td rowspan=5 valign="top">2.1.21, 2.1, latest</td>
+            <td >Debian 9</td>
+            <td><a href="placeholder">amd64</a>, <a href="placeholder">arm32v7</a></td>
+            <td rowspan=5 valign="top">08/20/2020</td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 2004</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1909</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1903</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+        <tr>
+            <td >Nano Server, version 1809</td>
+            <td><a href="placeholder">amd64</a></td>
+        </tr>
+    </tbody>
+</table>
 
 ## Linux amd64 Tags
 
@@ -120,19 +181,19 @@ Tags | OS Version | Arch / Dockerfile | Last Modified
 
 | Tags | OS Version | Arch / Dockerfile | Last Modified
 -----------| -----------| -------------| -------------
-| 5.0.0-nanoserver-2004, 5.0-nanoserver-2004 | Windows Server, version 2004 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/nanoserver-2004/amd64/Dockerfile) | 08/20/2020
-| 5.0.0-nanoserver-1909, 5.0-nanoserver-1909 | Windows Server, version 1909 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/nanoserver-1909/amd64/Dockerfile) | 08/20/2020
-| 5.0.0-nanoserver-1903, 5.0-nanoserver-1903 | Windows Server, version 1903 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/nanoserver-1903/amd64/Dockerfile) | 08/20/2020
-| 5.0.0-nanoserver-1809, 5.0-nanoserver-1809 | Windows Server 2019 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/nanoserver-1809/amd64/Dockerfile) | 08/20/2020
-5.0.0-windowsservercore-ltsc2019, 5.0-windowsservercore-ltsc2019 | Windows Server 2019 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/windowsservercore-ltsc2019/amd64/Dockerfile) | 08/20/2020
-| 3.1.7-nanoserver-2004, 3.1-nanoserver-2004 | Windows Server, version 2004 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/nanoserver-2004/amd64/Dockerfile) | 08/20/2020
-| 3.1.7-nanoserver-1909, 3.1-nanoserver-1909 | Windows Server, version 1909 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/nanoserver-1909/amd64/Dockerfile) | 08/20/2020
-| 3.1.7-nanoserver-1903, 3.1-nanoserver-1903 | Windows Server, version 1903 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/nanoserver-1903/amd64/Dockerfile) | 08/20/2020
-| 3.1.7-nanoserver-1809, 3.1-nanoserver-1809 | Windows Server 2019 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/nanoserver-1809/amd64/Dockerfile) | 08/20/2020
-| 2.1.21-nanoserver-2004, 2.1-nanoserver-2004 | Windows Server, version 2004 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/nanoserver-2004/amd64/Dockerfile) | 08/20/2020
-| 2.1.21-nanoserver-1909, 2.1-nanoserver-1909 | Windows Server, version 1909 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/nanoserver-1909/amd64/Dockerfile) | 08/20/2020
-| 2.1.21-nanoserver-1903, 2.1-nanoserver-1903 | Windows Server, version 1903 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/nanoserver-1903/amd64/Dockerfile) | 08/20/2020
-| 2.1.21-nanoserver-1809, 2.1-nanoserver-1809 | Windows Server 2019 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/nanoserver-1809/amd64/Dockerfile) | 08/20/2020
+| 5.0.0-nanoserver-2004, 5.0-nanoserver-2004 | Nano Server, version 2004 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/nanoserver-2004/amd64/Dockerfile) | 08/20/2020
+| 5.0.0-nanoserver-1909, 5.0-nanoserver-1909 | Nano Server, version 1909 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/nanoserver-1909/amd64/Dockerfile) | 08/20/2020
+| 5.0.0-nanoserver-1903, 5.0-nanoserver-1903 | Nano Server, version 1903 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/nanoserver-1903/amd64/Dockerfile) | 08/20/2020
+| 5.0.0-nanoserver-1809, 5.0-nanoserver-1809 | Nano Server, version 1809 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/nanoserver-1809/amd64/Dockerfile) | 08/20/2020
+| 5.0.0-windowsservercore-ltsc2019, 5.0-windowsservercore-ltsc2019 | Windows Server Core, version 1809 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/5.0/windowsservercore-ltsc2019/amd64/Dockerfile)  | 08/20/2020
+| 3.1.7-nanoserver-2004, 3.1-nanoserver-2004 | Nano Server, version 2004 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/nanoserver-2004/amd64/Dockerfile) | 08/20/2020
+| 3.1.7-nanoserver-1909, 3.1-nanoserver-1909 | Nano Server, version 1909 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/nanoserver-1909/amd64/Dockerfile) | 08/20/2020
+| 3.1.7-nanoserver-1903, 3.1-nanoserver-1903 | Nano Server, version 1903 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/nanoserver-1903/amd64/Dockerfile) | 08/20/2020
+| 3.1.7-nanoserver-1809, 3.1-nanoserver-1809 | Nano Server, version 1809 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/3.1/nanoserver-1809/amd64/Dockerfile) | 08/20/2020
+| 2.1.21-nanoserver-2004, 2.1-nanoserver-2004 | Nano Server, version 2004 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/nanoserver-2004/amd64/Dockerfile) | 08/20/2020
+| 2.1.21-nanoserver-1909, 2.1-nanoserver-1909 | Nano Server, version 1909 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/nanoserver-1909/amd64/Dockerfile) | 08/20/2020
+| 2.1.21-nanoserver-1903, 2.1-nanoserver-1903 | Nano Server, version 1903 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/nanoserver-1903/amd64/Dockerfile) | 08/20/2020
+| 2.1.21-nanoserver-1809, 2.1-nanoserver-1809 | Nano Server, version 1809 | [amd64](https://github.com/dotnet/dotnet-docker/blob/master/src/runtime/2.1/nanoserver-1809/amd64/Dockerfile) | 08/20/2020
 
 You can retrieve a list of all available tags for dotnet/core/runtime at https://mcr.microsoft.com/v2/dotnet/runtime/tags/list.
 
