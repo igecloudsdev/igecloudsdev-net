@@ -1,5 +1,20 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
-FROM $REPO:6.0.6-alpine3.16-amd64
+# Installer image
+FROM $REPO:6.0.9-alpine3.16-amd64 AS installer
+
+ARG SAS_QUERY_STRING
+
+# Install .NET SDK
+RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.401-servicing.22421.13/dotnet-sdk-6.0.401-linux-musl-x64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='acdb7c08d4fb290d3aac2e212c51840f6d9ca787aca94dffe85317a515c541670456ffe37c2365541f18edcd7b39243d72e7d8e5ab4562a2896fd96bbf6cf6b8' \
+    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
+    && rm dotnet.tar.gz
+
+
+# .NET SDK image
+FROM $REPO:6.0.9-alpine3.16-amd64
 
 ENV \
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -9,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=6.0.301 \
+    DOTNET_SDK_VERSION=6.0.401-servicing.22421.13 \
     # Disable the invariant mode (set in base image)
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     # Enable correct mode for dotnet watch (only mode supported in a container)
@@ -25,20 +40,15 @@ RUN apk add --no-cache \
         icu-libs \
         git
 
-# Install .NET SDK
-RUN wget -O dotnet.tar.gz https://dotnetcli.azureedge.net/dotnet/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-musl-x64.tar.gz \
-    && dotnet_sha512='28e57adc8ac4a82bcfb2d3e623e43b04dc3f2327d7bbc130ecf122cb7d9d1a2f109f51fd14e9be0970e9ca4657d83d4771cc02e791c1e6ff4922d51b89af5f93' \
-    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
-    && mkdir -p /usr/share/dotnet \
-    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
-    && rm dotnet.tar.gz \
-    # Trigger first run experience by running arbitrary cmd
-    && dotnet help
+COPY --from=installer ["/usr/share/dotnet", "/usr/share/dotnet"]
+
+# Trigger first run experience by running arbitrary cmd
+RUN dotnet help
 
 # Install PowerShell global tool
-RUN powershell_version=7.2.5 \
+RUN powershell_version=7.2.6 \
     && wget -O PowerShell.Linux.Alpine.$powershell_version.nupkg https://pwshtool.blob.core.windows.net/tool/$powershell_version/PowerShell.Linux.Alpine.$powershell_version.nupkg \
-    && powershell_sha512='ee433eb5bca85e7a040a0062a43ec503f52c3c30b9f9b37bc8359480e567c2804868f384c5ac82a52846dbcf6c95ffb297e2db5c2410f88fea8fa85b4123aeed' \
+    && powershell_sha512='4ec8abc388021188fe1c98c5228de2774ed1ec9b703e02bb0db6372135f5513dbf5d32c9f5c5ec7ea006e4ee09d06ca8214c1e071691a0f8dab23298896cd83d' \
     && echo "$powershell_sha512  PowerShell.Linux.Alpine.$powershell_version.nupkg" | sha512sum -c - \
     && mkdir -p /usr/share/powershell \
     && dotnet tool install --add-source / --tool-path /usr/share/powershell --version $powershell_version PowerShell.Linux.Alpine \

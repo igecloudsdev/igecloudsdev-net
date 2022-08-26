@@ -24,7 +24,7 @@ RUN tdnf install -y shadow-utils \
         app \
     && adduser \
         --uid 101 \
-        --gid app \
+        --gid 101 \
         --shell /bin/false \
         --no-create-home \
         --system \
@@ -37,6 +37,7 @@ RUN tdnf install -y shadow-utils \
 RUN rm -rf /staging/etc/tdnf \
     && rm -rf /staging/run/* \
     && rm -rf /staging/var/cache/tdnf \
+    && rm -rf /staging/var/lib/rpm \
     && rm -rf /staging/usr/share/doc \
     && rm -rf /staging/usr/share/man \
     && find /staging/var/log -type f -size +0 -delete

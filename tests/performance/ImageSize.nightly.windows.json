@@ -1,13 +1,11 @@
 {
   "dotnet/nightly/runtime": {
     "src/runtime/3.1/nanoserver-1809/amd64": 321408734,
-    "src/runtime/3.1/nanoserver-20H2/amd64": 333111462,
     "src/runtime/3.1/nanoserver-ltsc2022/amd64": 367706323,
     "src/runtime/6.0/nanoserver-1809/amd64": 339178589,
-    "src/runtime/6.0/nanoserver-20H2/amd64": 331505218,
     "src/runtime/6.0/nanoserver-ltsc2022/amd64": 369353141,
     "src/runtime/6.0/windowsservercore-ltsc2019/amd64": 5658815336,
-    "src/runtime/6.0/windowsservercore-ltsc2022/amd64": 4891855163,
+    "src/runtime/6.0/windowsservercore-ltsc2022/amd64": 5177974979,
     "src/runtime/7.0/nanoserver-1809/amd64": 328470826,
     "src/runtime/7.0/nanoserver-ltsc2022/amd64": 367604122,
     "src/runtime/7.0/windowsservercore-ltsc2019/amd64": 5656851022,
@@ -15,13 +13,11 @@
   },
   "dotnet/nightly/aspnet": {
     "src/aspnet/3.1/nanoserver-1809/amd64": 341072949,
-    "src/aspnet/3.1/nanoserver-20H2/amd64": 352830735,
     "src/aspnet/3.1/nanoserver-ltsc2022/amd64": 387443373,
     "src/aspnet/6.0/nanoserver-1809/amd64": 362186301,
-    "src/aspnet/6.0/nanoserver-20H2/amd64": 352141366,
     "src/aspnet/6.0/nanoserver-ltsc2022/amd64": 391627241,
     "src/aspnet/6.0/windowsservercore-ltsc2019/amd64": 5687534230,
-    "src/aspnet/6.0/windowsservercore-ltsc2022/amd64": 4926375762,
+    "src/aspnet/6.0/windowsservercore-ltsc2022/amd64": 5213946882,
     "src/aspnet/7.0/nanoserver-1809/amd64": 349969843,
     "src/aspnet/7.0/nanoserver-ltsc2022/amd64": 389103139,
     "src/aspnet/7.0/windowsservercore-ltsc2019/amd64": 5686161226,
@@ -29,16 +25,14 @@
   },
   "dotnet/nightly/sdk": {
     "src/sdk/3.1/nanoserver-1809/amd64": 769444420,
-    "src/sdk/3.1/nanoserver-20H2/amd64": 764063867,
     "src/sdk/3.1/nanoserver-ltsc2022/amd64": 800304552,
     "src/sdk/6.0/nanoserver-1809/amd64": 964537766,
-    "src/sdk/6.0/nanoserver-20H2/amd64": 969118771,
     "src/sdk/6.0/nanoserver-ltsc2022/amd64": 1006844828,
     "src/sdk/6.0/windowsservercore-ltsc2019/amd64": 6286084693,
-    "src/sdk/6.0/windowsservercore-ltsc2022/amd64": 5556352529,
-    "src/sdk/7.0/nanoserver-1809/amd64": 975012837,
-    "src/sdk/7.0/nanoserver-ltsc2022/amd64": 1058152303,
-    "src/sdk/7.0/windowsservercore-ltsc2019/amd64": 6333303763,
-    "src/sdk/7.0/windowsservercore-ltsc2022/amd64": 5629364231
+    "src/sdk/6.0/windowsservercore-ltsc2022/amd64": 5881858810,
+    "src/sdk/7.0/nanoserver-1809/amd64": 1031012837,
+    "src/sdk/7.0/nanoserver-ltsc2022/amd64": 1114152303,
+    "src/sdk/7.0/windowsservercore-ltsc2019/amd64": 6389303763,
+    "src/sdk/7.0/windowsservercore-ltsc2022/amd64": 5685364231
   }
 }

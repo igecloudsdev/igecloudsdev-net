@@ -2,12 +2,12 @@ ARG ASPNET_REPO=mcr.microsoft.com/dotnet/aspnet
 ARG SDK_REPO=mcr.microsoft.com/dotnet/sdk
 
 # Installer image
-FROM $SDK_REPO:7.0.100-preview.6-alpine3.16-arm64v8 AS installer
+FROM $SDK_REPO:7.0.100-rc.1-alpine3.16-arm64v8 AS installer
 
 # Install .NET Monitor
-ENV DOTNET_MONITOR_VERSION=7.0.0-preview.6.22330.7
+ENV DOTNET_MONITOR_VERSION=7.0.0-preview.8.22422.5
 RUN wget -O dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg https://dotnetbuilds.azureedge.net/public/diagnostics/monitor/$DOTNET_MONITOR_VERSION/dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg \
-    && dotnetmonitor_sha512='3bb79ff137671436907e2d6984201f7811d41863e047e674e44f8af4885fc9f3131ff475e92cd00c71c6425fedfb4c87cf4bd9e41efa1cce567cbd4385d75119' \
+    && dotnetmonitor_sha512='92622b062da1d61f67c6943af6fca827c702e45611b84fedbe090deee83e1007f253e405b1bc107c9859da5453416d870a9fe9ebe7df3957f4bf2227d0ed0a7e' \
     && echo "$dotnetmonitor_sha512  dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg" | sha512sum -c - \
     && dotnet tool install dotnet-monitor --tool-path /app --add-source / --version $DOTNET_MONITOR_VERSION --framework net7.0 --no-cache \
     # To reduce image size, remove all non-net7.0 TFMs
@@ -28,7 +28,7 @@ RUN wget -O dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg https://dotnetbuilds.az
 
 
 # Monitor image
-FROM $ASPNET_REPO:7.0.0-preview.6-alpine3.16-arm64v8
+FROM $ASPNET_REPO:7.0.0-rc.1-alpine3.16-arm64v8
 
 WORKDIR /app
 COPY --from=installer /app .
@@ -41,6 +41,8 @@ ENV \
     # Default Filter
     DefaultProcess__Filters__0__Key=ProcessId \
     DefaultProcess__Filters__0__Value=1 \
+    # Remove Unix Domain Socket before starting diagnostic port server
+    DiagnosticPort__DeleteEndpointOnStartup=true \
     # Logging: JSON format so that analytic platforms can get discrete entry information
     Logging__Console__FormatterName=json \
     # Logging: Use round-trip date/time format without timezone information (always logged in UTC)

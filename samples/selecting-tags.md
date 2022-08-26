@@ -48,7 +48,6 @@ The following tags demonstrate the pattern used to describe each operating syste
 * `6.0-focal` (Ubuntu 20.04)
 * `6.0-bullseye-slim` (Debian 11)
 * `6.0-nanoserver-ltsc2022` (Nano Server LTSC 2022)
-* `6.0-nanoserver-20H2` (Nano Server, version 20H2)
 * `6.0-nanoserver-1809` (Nano Server, version 1809)
 * `6.0-windowsservercore-ltsc2022` (Windows Server Core LTSC 2022)
 * `6.0-windowsservercore-ltsc2019` (Windows Server Core LTSC 2019)
@@ -109,7 +108,6 @@ The following tags demonstrate the pattern used to describe each processor, usin
 * `6.0-alpine-amd64`
 * `6.0-focal-amd64`
 * `6.0-bullseye-slim-amd64`
-* `6.0-nanoserver-20H2`
 * `6.0-nanoserver-1809`
 * `6.0-windowsservercore-ltsc2019`
 
@@ -145,5 +143,5 @@ Linux containers are flexible. As long as the processor architecture matches, yo
 There are multiple patterns used in the samples:
 
 * Multi-platform tags for both SDK and runtime (can be built and run in any single environment) -- see [dotnetapp/Dockerfile](dotnetapp/Dockerfile) and [aspnetapp/Dockerfile](dotnetapp/Dockerfile)
-* Multi-platform tag for the SDK and architecture-specific Linux runtime tag (can be built on any environment that supports Linux containers and run in any processor-specific environment that supports Linux containers) -- see [dotnetapp/Dockerfile.alpine-x64](dotnetapp/Dockerfile) and [aspnetapp/Dockerfile.alpine-arm64](aspnetapp/Dockerfile.alpine-arm64)
+* Multi-platform tag for the SDK and architecture-specific Linux runtime tag (can be built on any environment that supports Linux containers and run in any processor-specific environment that supports Linux containers) -- see [dotnetapp/Dockerfile.alpine-x64](dotnetapp/Dockerfile.alpine-x64) and [aspnetapp/Dockerfile.alpine-arm64](aspnetapp/Dockerfile.alpine-arm64)
 * Multi-platform tag for the SDK and a Windows-version-specific runtime tag (can be built on any environment that supports Windows containers and run in any processor-specific environment that supports the specific Windows versions) -- see [dotnetapp/Dockerfile.nanoserver-x64](dotnetapp/Dockerfile.nanoserver-x64)

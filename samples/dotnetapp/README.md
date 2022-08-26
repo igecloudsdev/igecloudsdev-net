@@ -43,7 +43,7 @@ RUN dotnet restore
 
 # copy and publish app and libraries
 COPY . .
-RUN dotnet publish -c release -o /app --no-restore
+RUN dotnet publish -c Release -o /app --no-restore
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime:6.0
@@ -132,7 +132,7 @@ docker images dotnetapp
 The `Dockerfile.nanoserver-x64` Dockerfile targets a version-specific tag, which will result in a Nano Server version that targets a specific Windows version (and will only work on Windows hosts of the same version or higher). You can update the following the tag to a different version, as needed.
 
 ```console
-FROM mcr.microsoft.com/dotnet/runtime:6.0-nanoserver-20H2
+FROM mcr.microsoft.com/dotnet/runtime:6.0-nanoserver-ltsc2022
 ```
 
 ## Build an image for ARM32 and ARM64

@@ -30,11 +30,11 @@ namespace Microsoft.DotNet.Docker.Tests
         public const string Bionic = "bionic";
         public const string Focal = "focal";
         public const string Jammy = "jammy";
+        public const string JammyChiseled = "jammy-chiseled";
 
         // Windows
         public const string NanoServer = "nanoserver";
         public const string NanoServer1809 = $"{NanoServer}-1809";
-        public const string NanoServer20H2 = $"{NanoServer}-20H2";
         public const string NanoServerLtsc2022 = $"{NanoServer}-ltsc2022";
         public const string ServerCore = "windowsservercore";
         public const string ServerCoreLtsc2019 = $"{ServerCore}-ltsc2019";
