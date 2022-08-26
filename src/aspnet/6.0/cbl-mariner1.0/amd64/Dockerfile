@@ -1,12 +1,24 @@
 ARG REPO=mcr.microsoft.com/dotnet/runtime
-FROM $REPO:6.0.8-cbl-mariner1.0-amd64
+
+# Installer image
+FROM $REPO:6.0.9-cbl-mariner1.0-amd64 AS installer
+
+ARG SAS_QUERY_STRING
+
+# Retrieve ASP.NET Core
+RUN aspnetcore_version=6.0.9-servicing.22419.26 \
+    && curl -fSL --output aspnetcore.rpm https://dotnetbuilds.blob.core.windows.net/internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.9-x64.rpm$SAS_QUERY_STRING \
+    && aspnetcore_sha512='8cee2325485cdee7bd912ecca8e1c8e7092f088e4439a0fdbcd7ee1e6cbe13d1dc0d0446c50f695300acfef642e2a5d978e1476a028a894227ec9c626a080163' \
+    && echo "$aspnetcore_sha512  aspnetcore.rpm" | sha512sum -c -
+
+
+# ASP.NET Core image
+FROM $REPO:6.0.9-cbl-mariner1.0-amd64
 
 # ASP.NET Core version
-ENV ASPNET_VERSION=6.0.8
+ENV ASPNET_VERSION=6.0.9-servicing.22419.26
 
-# Install ASP.NET Core
-RUN curl -fSL --output aspnetcore.rpm https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/$ASPNET_VERSION/aspnetcore-runtime-$ASPNET_VERSION-x64.rpm \
-    && aspnetcore_sha512='9cfb91e5a4221755fb152b5ea5d69a6e0f8b693b45656f23df17cabd4a5aeef321d893dadba61fd41821140544275d5789545a172198149e228ef1b64751f386' \
-    && echo "$aspnetcore_sha512  aspnetcore.rpm" | sha512sum -c - \
-    && rpm --install aspnetcore.rpm \
+COPY --from=installer /aspnetcore.rpm /aspnetcore.rpm
+
+RUN rpm --install aspnetcore.rpm \
     && rm aspnetcore.rpm

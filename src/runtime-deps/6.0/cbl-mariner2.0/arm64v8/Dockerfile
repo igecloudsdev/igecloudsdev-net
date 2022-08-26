@@ -1,3 +1,12 @@
+# Installer image
+FROM mcr.microsoft.com/cbl-mariner/base/core:2.0 AS installer
+
+ARG SAS_QUERY_STRING
+
+RUN dotnet_version=6.0.9-servicing.22419.5 \
+    && curl -fSL --output dotnet-runtime-deps.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-deps-6.0.9-cm.2-aarch64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='e0b8baebf55b97fa3648f6e9494ce5c8b208c58192ce086df97fe1af7a82c7fda5f2c914a7ce4881842115a3198e34ed274d52dd90bae171491bf058a138e29d' \
+    && echo "$dotnet_sha512  dotnet-runtime-deps.rpm" | sha512sum -c -
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0
 
 RUN tdnf install -y \
@@ -13,12 +22,10 @@ RUN tdnf install -y \
         zlib \
     && tdnf clean all
 
+COPY --from=installer /dotnet-runtime-deps.rpm /dotnet-runtime-deps.rpm
+
 # Install dotnet-runtime-deps package
-RUN dotnet_version=6.0.8 \
-    && curl -fSL --output dotnet-runtime-deps.rpm https://dotnetcli.azureedge.net/dotnet/Runtime/$dotnet_version/dotnet-runtime-deps-$dotnet_version-cm.2-aarch64.rpm \
-    && dotnet_sha512='ff4abaf69902d078b107959aa03886551d5bb730c3caa9d662d56c0026a87396bfe13d6e4a3e5db5629b8ea1f58b7f7814032b2e7edbbcc7a7b5fb6a71cf13a7' \
-    && echo "$dotnet_sha512  dotnet-runtime-deps.rpm" | sha512sum -c - \
-    && tdnf install -y --disablerepo=* dotnet-runtime-deps.rpm \
+RUN tdnf install -y --disablerepo=* dotnet-runtime-deps.rpm \
     && rm dotnet-runtime-deps.rpm
 
 ENV \
