@@ -1,23 +1,11 @@
 # escape=`
 
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
-FROM $REPO:7.0.0-rc.1-windowsservercore-ltsc2022
 
-ENV `
-    # Unset ASPNETCORE_URLS from aspnet base image
-    ASPNETCORE_URLS= `
-    # Do not generate certificate
-    DOTNET_GENERATE_ASPNET_CERTIFICATE=false `
-    # Do not show first run text
-    DOTNET_NOLOGO=true `
-    # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22415.4 `
-    # Enable correct mode for dotnet watch (only mode supported in a container)
-    DOTNET_USE_POLLING_FILE_WATCHER=true `
-    # Skip extraction of XML docs - generally not useful within an image/container - helps performance
-    NUGET_XMLDOC_MODE=skip `
-    # PowerShell telemetry for docker image usage
-    POWERSHELL_DISTRIBUTION_CHANNEL=PSDocker-DotnetSDK-WindowsServerCore-ltsc2022
+# Installer image
+FROM mcr.microsoft.com/windows/servercore:ltsc2022-amd64 AS installer
+
+ARG SAS_QUERY_STRING
 
 # Download MinGit
 RUN powershell -Command " `
@@ -30,8 +18,8 @@ RUN powershell -Command " `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
         }; `
-        mkdir $Env:ProgramFiles\MinGit; `
-        tar -oxzf mingit.zip -C $Env:ProgramFiles\MinGit; `
+        mkdir MinGit; `
+        tar -oxzf mingit.zip -C MinGit; `
         Remove-Item -Force mingit.zip"
 
 RUN powershell -Command " `
@@ -39,13 +27,15 @@ RUN powershell -Command " `
         $ProgressPreference = 'SilentlyContinue'; `
         `
         # Retrieve .NET SDK
-        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.azureedge.net/public/Sdk/$Env:DOTNET_SDK_VERSION/dotnet-sdk-$Env:DOTNET_SDK_VERSION-win-x64.zip; `
-        $dotnet_sha512 = '5903dd04a237a321f2b1371e4436463d852b3b61d78f54b2ce7f0d94d02f247185b2135405ecbe11886cb22ff407a29175c0f00ad5b1b0cde4b035572e86ddd3'; `
+        $sdk_version = '7.0.100-rc.1.22429.3'; `
+        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.blob.core.windows.net/internal/Sdk/$sdk_version/dotnet-sdk-$sdk_version-win-x64.zip$Env:SAS_QUERY_STRING; `
+        $dotnet_sha512 = '8f46d0c6e7c0d04c42592546447fc4b7376ab32ec1227413a73c2835fe79e3fbee5df7a0481690e4bbcd93f0ca1f51b4c1116b034184a2a1ff389ca936777aa5'; `
         if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
         }; `
-        tar -oxzf dotnet.zip -C $Env:ProgramFiles\dotnet ./LICENSE.txt ./ThirdPartyNotices.txt ./packs ./sdk ./sdk-manifests ./templates ./shared/Microsoft.WindowsDesktop.App; `
+        mkdir dotnet; `
+        tar -oxzf dotnet.zip -C dotnet; `
         Remove-Item -Force dotnet.zip; `
         `
         # Install PowerShell global tool
@@ -56,12 +46,44 @@ RUN powershell -Command " `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
         }; `
-        & $Env:ProgramFiles\dotnet\dotnet tool install --add-source . --tool-path $Env:ProgramFiles\powershell --version $powershell_version PowerShell.Windows.x64; `
-        & $Env:ProgramFiles\dotnet\dotnet nuget locals all --clear; `
+        & \dotnet\dotnet tool install --add-source . --tool-path \powershell --version $powershell_version PowerShell.Windows.x64; `
+        & \dotnet\dotnet nuget locals all --clear; `
         Remove-Item -Force PowerShell.Windows.x64.$powershell_version.nupkg; `
-        Remove-Item -Path $Env:ProgramFiles\powershell\.store\powershell.windows.x64\$powershell_version\powershell.windows.x64\$powershell_version\powershell.windows.x64.$powershell_version.nupkg -Force;"
+        Remove-Item -Path \powershell\.store\powershell.windows.x64\$powershell_version\powershell.windows.x64\$powershell_version\powershell.windows.x64.$powershell_version.nupkg -Force; `
+        `
+        # Workaround for https://github.com/dotnet/sdk/issues/18410
+        \dotnet\dotnet build-server shutdown; `
+        `
+        # Delete everything in the dotnet folder that's not needed in the SDK layer but will instead be derived from base layers
+        Get-ChildItem -Exclude 'LICENSE.txt','ThirdPartyNotices.txt','packs','sdk','sdk-manifests','templates','shared' -Path dotnet `
+            | Remove-Item -Force -Recurse; `
+        Get-ChildItem -Exclude 'Microsoft.WindowsDesktop.App' -Path dotnet\shared `
+            | Remove-Item -Force -Recurse"
+
+# SDK image
+FROM $REPO:7.0.0-rc.1-windowsservercore-ltsc2022
+
+ENV `
+    # Unset ASPNETCORE_URLS from aspnet base image
+    ASPNETCORE_URLS= `
+    # Do not generate certificate
+    DOTNET_GENERATE_ASPNET_CERTIFICATE=false `
+    # Do not show first run text
+    DOTNET_NOLOGO=true `
+    # SDK version
+    DOTNET_SDK_VERSION=7.0.100-rc.1.22429.3 `
+    # Enable correct mode for dotnet watch (only mode supported in a container)
+    DOTNET_USE_POLLING_FILE_WATCHER=true `
+    # Skip extraction of XML docs - generally not useful within an image/container - helps performance
+    NUGET_XMLDOC_MODE=skip `
+    # PowerShell telemetry for docker image usage
+    POWERSHELL_DISTRIBUTION_CHANNEL=PSDocker-DotnetSDK-WindowsServerCore-ltsc2022
 
 RUN setx /M PATH "%PATH%;C:\Program Files\powershell;C:\Program Files\MinGit\cmd"
+
+COPY --from=installer ["/dotnet", "/Program Files/dotnet"]
+COPY --from=installer ["/powershell", "/Program Files/powershell"]
+COPY --from=installer ["/MinGit", "/Program Files/MinGit"]
 
 # Trigger first run experience by running arbitrary cmd
 RUN dotnet help

@@ -1,4 +1,19 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
+# Installer image
+FROM arm64v8/buildpack-deps:bullseye-curl AS installer
+
+ARG SAS_QUERY_STRING
+
+# Install .NET SDK
+RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.1.22429.3/dotnet-sdk-7.0.100-rc.1.22429.3-linux-arm64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='78248a42d7a3673c78d4ea8dd76cec417ede39a3c4334fb7b3330473acc7c725c54616c711ac3a605770229466c3ba3219a8d45e54fcadb5b9083cf0346ac7fc' \
+    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
+    && rm dotnet.tar.gz
+
+
+# .NET SDK image
 FROM $REPO:7.0.0-rc.1-bullseye-slim-arm64v8
 
 ENV \
@@ -9,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22415.4 \
+    DOTNET_SDK_VERSION=7.0.100-rc.1.22429.3 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance
@@ -24,15 +39,10 @@ RUN apt-get update \
         wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Install .NET SDK
-RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.azureedge.net/public/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-arm64.tar.gz \
-    && dotnet_sha512='bba1efca056e2144fdd94802f4aacff9001da42c4fde8072f710ec7d18b6be92b1d9ffef8763f92762fbaae5d30e7b67510e9bc35f4f73cf7c7b2c36b5302d7a' \
-    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
-    && mkdir -p /usr/share/dotnet \
-    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
-    && rm dotnet.tar.gz \
-    # Trigger first run experience by running arbitrary cmd
-    && dotnet help
+COPY --from=installer ["/usr/share/dotnet", "/usr/share/dotnet"]
+
+# Trigger first run experience by running arbitrary cmd
+RUN dotnet help
 
 # Install PowerShell global tool
 RUN powershell_version=7.3.0-preview.7 \

@@ -1,4 +1,19 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
+# Installer image
+FROM $REPO:7.0.0-rc.1-alpine3.16-arm32v7 AS installer
+
+ARG SAS_QUERY_STRING
+
+# Install .NET SDK
+RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.1.22429.3/dotnet-sdk-7.0.100-rc.1.22429.3-linux-musl-arm.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='8b2b96ab40b00ea020aa9abfcef66c32838b4c6ae10b692bdd9014856d694630ac3c438d1b391b026502635c4884e13cdc92479a42235355027029f4ab392d3e' \
+    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
+    && rm dotnet.tar.gz
+
+
+# .NET SDK image
 FROM $REPO:7.0.0-rc.1-alpine3.16-arm32v7
 
 ENV \
@@ -9,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22415.4 \
+    DOTNET_SDK_VERSION=7.0.100-rc.1.22429.3 \
     # Disable the invariant mode (set in base image)
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     # Enable correct mode for dotnet watch (only mode supported in a container)
@@ -25,12 +40,7 @@ RUN apk add --no-cache \
         icu-libs \
         git
 
-# Install .NET SDK
-RUN wget -O dotnet.tar.gz https://dotnetbuilds.azureedge.net/public/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-musl-arm.tar.gz \
-    && dotnet_sha512='97c6f6945f69b5ccd236dbbc8e61b512be3324e265f47a618e25a833aee6fa772a8d7194ccb39ab74e66a5cc4cf7b3719519a51323fb572e8a6ba7bc84e972fa' \
-    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
-    && mkdir -p /usr/share/dotnet \
-    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
-    && rm dotnet.tar.gz \
-    # Trigger first run experience by running arbitrary cmd
-    && dotnet help
+COPY --from=installer ["/usr/share/dotnet", "/usr/share/dotnet"]
+
+# Trigger first run experience by running arbitrary cmd
+RUN dotnet help

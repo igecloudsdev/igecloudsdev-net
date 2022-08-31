@@ -5,6 +5,8 @@ ARG REPO=mcr.microsoft.com/dotnet/aspnet
 # Installer image
 FROM mcr.microsoft.com/windows/servercore:ltsc2022-amd64 AS installer
 
+ARG SAS_QUERY_STRING
+
 # Download MinGit
 RUN powershell -Command " `
         $ErrorActionPreference = 'Stop'; `
@@ -25,9 +27,9 @@ RUN powershell -Command " `
         $ProgressPreference = 'SilentlyContinue'; `
         `
         # Retrieve .NET SDK
-        $sdk_version = '7.0.100-rc.1.22415.4'; `
-        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.azureedge.net/public/Sdk/$sdk_version/dotnet-sdk-$sdk_version-win-x64.zip; `
-        $dotnet_sha512 = '5903dd04a237a321f2b1371e4436463d852b3b61d78f54b2ce7f0d94d02f247185b2135405ecbe11886cb22ff407a29175c0f00ad5b1b0cde4b035572e86ddd3'; `
+        $sdk_version = '7.0.100-rc.1.22429.3'; `
+        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.blob.core.windows.net/internal/Sdk/$sdk_version/dotnet-sdk-$sdk_version-win-x64.zip$Env:SAS_QUERY_STRING; `
+        $dotnet_sha512 = '8f46d0c6e7c0d04c42592546447fc4b7376ab32ec1227413a73c2835fe79e3fbee5df7a0481690e4bbcd93f0ca1f51b4c1116b034184a2a1ff389ca936777aa5'; `
         if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -69,7 +71,7 @@ ENV `
     # Do not show first run text
     DOTNET_NOLOGO=true `
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22415.4 `
+    DOTNET_SDK_VERSION=7.0.100-rc.1.22429.3 `
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true `
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

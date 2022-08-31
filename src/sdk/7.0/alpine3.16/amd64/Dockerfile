@@ -1,4 +1,19 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
+# Installer image
+FROM $REPO:7.0.0-rc.1-alpine3.16-amd64 AS installer
+
+ARG SAS_QUERY_STRING
+
+# Install .NET SDK
+RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.1.22429.3/dotnet-sdk-7.0.100-rc.1.22429.3-linux-musl-x64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='40e11ad8c166ec414a93c5a808176714cb2d36a4a57f07dc6d8c285ccb151fa8212dc288666885b8454dd98017c205d9e028f70510e2f8ea474c1929832aa8cf' \
+    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
+    && rm dotnet.tar.gz
+
+
+# .NET SDK image
 FROM $REPO:7.0.0-rc.1-alpine3.16-amd64
 
 ENV \
@@ -9,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22415.4 \
+    DOTNET_SDK_VERSION=7.0.100-rc.1.22429.3 \
     # Disable the invariant mode (set in base image)
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     # Enable correct mode for dotnet watch (only mode supported in a container)
@@ -25,15 +40,10 @@ RUN apk add --no-cache \
         icu-libs \
         git
 
-# Install .NET SDK
-RUN wget -O dotnet.tar.gz https://dotnetbuilds.azureedge.net/public/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-musl-x64.tar.gz \
-    && dotnet_sha512='b9add1ba4f0aa1dfaaf62eea7073a558262ed2c7bb7798e1fc173b2762bf4beb0909eed7e5d14a5a3517815e91cf956881c462ea033bd3d7ad71157d800046b4' \
-    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
-    && mkdir -p /usr/share/dotnet \
-    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
-    && rm dotnet.tar.gz \
-    # Trigger first run experience by running arbitrary cmd
-    && dotnet help
+COPY --from=installer ["/usr/share/dotnet", "/usr/share/dotnet"]
+
+# Trigger first run experience by running arbitrary cmd
+RUN dotnet help
 
 # Install PowerShell global tool
 RUN powershell_version=7.3.0-preview.7 \
