@@ -5,8 +5,8 @@ FROM $REPO:7.0.0-rc.1-cbl-mariner2.0-amd64 AS installer
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN curl -fSL --output dotnet.rpm https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.1.22429.3/dotnet-sdk-7.0.100-rc.1.22429.3-x64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='a33eb6e74ec2ecd64d843f2da22df7cbc397248bc4138060e972d7fa791d5152dca738734f2631ac06256495712ea2d54b0755c6cbdc6e5333a7629043ab663b' \
+RUN curl -fSL --output dotnet.rpm https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.1.22431.12/dotnet-sdk-7.0.100-rc.1.22431.12-x64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='44d169b5f31c5759bb9ba44bcf33c450c761cc4464d3bcafa7272f07d3ced117dc6f972f07ad9dbcd62392d3f9925d67e45d43403445d82c64faeee83086f3a8' \
     && echo "$dotnet_sha512  dotnet.rpm" | sha512sum -c - \
     \
     && curl -fSL --output apphost.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$DOTNET_VERSION/dotnet-apphost-pack-$DOTNET_VERSION-x64.rpm$SAS_QUERY_STRING \
@@ -37,7 +37,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22429.3 \
+    DOTNET_SDK_VERSION=7.0.100-rc.1.22431.12 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

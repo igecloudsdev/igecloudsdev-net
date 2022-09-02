@@ -12,8 +12,8 @@ RUN powershell -Command " `
         $ErrorActionPreference = 'Stop'; `
         $ProgressPreference = 'SilentlyContinue'; `
         `
-        Invoke-WebRequest -OutFile mingit.zip https://github.com/git-for-windows/git/releases/download/v2.37.2.windows.2/MinGit-2.37.2.2-64-bit.zip; `
-        $mingit_sha256 = '12b7c2c8cb9db03fd8c81e618aab196a366d919b2dc0dcd5a062738a07960a05'; `
+        Invoke-WebRequest -OutFile mingit.zip https://github.com/git-for-windows/git/releases/download/v2.37.3.windows.1/MinGit-2.37.3-64-bit.zip; `
+        $mingit_sha256 = 'cec8d038fadbdd82e269a5c458fd2a62711c1bb9a76c85f07c46de3bff6cdf32'; `
         if ((Get-FileHash mingit.zip -Algorithm sha256).Hash -ne $mingit_sha256) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -27,9 +27,9 @@ RUN powershell -Command " `
         $ProgressPreference = 'SilentlyContinue'; `
         `
         # Retrieve .NET SDK
-        $sdk_version = '7.0.100-rc.1.22429.3'; `
+        $sdk_version = '7.0.100-rc.1.22431.12'; `
         Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.blob.core.windows.net/internal/Sdk/$sdk_version/dotnet-sdk-$sdk_version-win-x64.zip$Env:SAS_QUERY_STRING; `
-        $dotnet_sha512 = '8f46d0c6e7c0d04c42592546447fc4b7376ab32ec1227413a73c2835fe79e3fbee5df7a0481690e4bbcd93f0ca1f51b4c1116b034184a2a1ff389ca936777aa5'; `
+        $dotnet_sha512 = '931fef3ac59545f6017f7b890f3b15167aa51ff1d99db90b897d29897c278c81dea32730a371f7461e41eb73d1f8e422f784754f116f5fff64642b65e17e6271'; `
         if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -71,7 +71,7 @@ ENV `
     # Do not show first run text
     DOTNET_NOLOGO=true `
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22429.3 `
+    DOTNET_SDK_VERSION=7.0.100-rc.1.22431.12 `
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true `
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance
