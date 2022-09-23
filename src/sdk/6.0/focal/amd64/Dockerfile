@@ -5,8 +5,8 @@ FROM amd64/buildpack-deps:focal-curl AS installer
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.401-servicing.22421.13/dotnet-sdk-6.0.401-linux-x64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='6fce5f29e6cfc80da1df86d2de3a637108023397d275e0dcfa0b79ef36eb85c2c3433db467aa5d8fda7e32bc21205a126636b53d56c4eb4c547d9d3b2370cb31' \
+RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.402-servicing.22470.36/dotnet-sdk-6.0.402-linux-x64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='c147976d969b50cdde2a8c4a93b34324dc54f21bf84568f988d70b4c98982ef0b555b033ea70854010303bd9524c2575012a4a2dff427993023ffc2fb7d5bf67' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -14,7 +14,7 @@ RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/
 
 
 # .NET SDK image
-FROM $REPO:6.0.9-focal-amd64
+FROM $REPO:6.0.10-focal-amd64
 
 ENV \
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -24,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=6.0.401-servicing.22421.13 \
+    DOTNET_SDK_VERSION=6.0.402-servicing.22470.36 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

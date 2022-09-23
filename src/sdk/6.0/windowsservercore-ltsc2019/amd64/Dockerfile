@@ -12,9 +12,9 @@ RUN powershell -Command " `
         $ProgressPreference = 'SilentlyContinue'; `
         `
         # Retrieve .NET SDK
-        $sdk_version = '6.0.401-servicing.22421.13'; `
-        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.blob.core.windows.net/internal/Sdk/$sdk_version/dotnet-sdk-6.0.401-win-x64.zip$Env:SAS_QUERY_STRING; `
-        $dotnet_sha512 = '15bb9e183bb00418fcd1238bf8a933474e2b1a94fdfdc14cedd189c22a71e73e9ad976eaa39d5b50b23d3fb9da1243702bd2d66c1144ad1864ed9d1c8af69456'; `
+        $sdk_version = '6.0.402-servicing.22470.36'; `
+        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.blob.core.windows.net/internal/Sdk/$sdk_version/dotnet-sdk-6.0.402-win-x64.zip$Env:SAS_QUERY_STRING; `
+        $dotnet_sha512 = 'd819bbee4d88cbc85eaad0edadc2630d4f0f503e561372c26eca9f7112b5c22d845eb3c54518c29b4f6f165b604b2cd28b1c9f95e6c394bdf01b10b3accda8d0'; `
         if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -46,7 +46,7 @@ RUN powershell -Command " `
             | Remove-Item -Force -Recurse"
 
 # SDK image
-FROM $REPO:6.0.9-windowsservercore-ltsc2019
+FROM $REPO:6.0.10-windowsservercore-ltsc2019
 
 ENV `
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -56,7 +56,7 @@ ENV `
     # Do not show first run text
     DOTNET_NOLOGO=true `
     # SDK version
-    DOTNET_SDK_VERSION=6.0.401-servicing.22421.13 `
+    DOTNET_SDK_VERSION=6.0.402-servicing.22470.36 `
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true `
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

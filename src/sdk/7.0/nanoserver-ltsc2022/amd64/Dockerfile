@@ -5,8 +5,6 @@ ARG REPO=mcr.microsoft.com/dotnet/aspnet
 # Installer image
 FROM mcr.microsoft.com/windows/servercore:ltsc2022-amd64 AS installer
 
-ARG SAS_QUERY_STRING
-
 # Download MinGit
 RUN powershell -Command " `
         $ErrorActionPreference = 'Stop'; `
@@ -27,9 +25,9 @@ RUN powershell -Command " `
         $ProgressPreference = 'SilentlyContinue'; `
         `
         # Retrieve .NET SDK
-        $sdk_version = '7.0.100-rc.1.22431.12'; `
-        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.blob.core.windows.net/internal/Sdk/$sdk_version/dotnet-sdk-$sdk_version-win-x64.zip$Env:SAS_QUERY_STRING; `
-        $dotnet_sha512 = '931fef3ac59545f6017f7b890f3b15167aa51ff1d99db90b897d29897c278c81dea32730a371f7461e41eb73d1f8e422f784754f116f5fff64642b65e17e6271'; `
+        $sdk_version = '7.0.100-rc.2.22472.26'; `
+        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.azureedge.net/public/Sdk/$sdk_version/dotnet-sdk-$sdk_version-win-x64.zip; `
+        $dotnet_sha512 = 'cdc4bc3d75a51ba25696d394011bcc540419a7d7af32edd99d9723ceb18e0e87d2c20a813f4352ce89b45f47224a17fa8f3c058a1c310430cdc7282a80449539'; `
         if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -39,9 +37,9 @@ RUN powershell -Command " `
         Remove-Item -Force dotnet.zip; `
         `
         # Install PowerShell global tool
-        $powershell_version = '7.3.0-preview.7'; `
+        $powershell_version = '7.3.0-preview.8'; `
         Invoke-WebRequest -OutFile PowerShell.Windows.x64.$powershell_version.nupkg https://pwshtool.blob.core.windows.net/tool/$powershell_version/PowerShell.Windows.x64.$powershell_version.nupkg; `
-        $powershell_sha512 = '8f00356af4d3a70da11af33ed19e025d2e7aa796d75be1b9a23b4ff590d818a1de8bf34da8ad2dd4cb75e90ee07e2ef55d5b68b48ec7ba45a2468aac81f32313'; `
+        $powershell_sha512 = '12a591075f1c2c664430479b459c434021be4ee98d11e64f54c0366b20b51120f24fa73efe9632e8d27dd262fac4fe12275dd879a5fce1cf806eaaa20dde269b'; `
         if ((Get-FileHash PowerShell.Windows.x64.$powershell_version.nupkg -Algorithm sha512).Hash -ne $powershell_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -61,7 +59,7 @@ RUN powershell -Command " `
             | Remove-Item -Force -Recurse"
 
 # SDK image
-FROM $REPO:7.0.0-rc.1-nanoserver-ltsc2022
+FROM $REPO:7.0.0-rc.2-nanoserver-ltsc2022
 
 ENV `
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -71,7 +69,7 @@ ENV `
     # Do not show first run text
     DOTNET_NOLOGO=true `
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22431.12 `
+    DOTNET_SDK_VERSION=7.0.100-rc.2.22472.26 `
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true `
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

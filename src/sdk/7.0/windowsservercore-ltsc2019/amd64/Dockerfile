@@ -1,11 +1,23 @@
 # escape=`
 
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
+FROM $REPO:7.0.0-rc.2-windowsservercore-ltsc2019
 
-# Installer image
-FROM mcr.microsoft.com/windows/servercore:ltsc2019-amd64 AS installer
-
-ARG SAS_QUERY_STRING
+ENV `
+    # Unset ASPNETCORE_URLS from aspnet base image
+    ASPNETCORE_URLS= `
+    # Do not generate certificate
+    DOTNET_GENERATE_ASPNET_CERTIFICATE=false `
+    # Do not show first run text
+    DOTNET_NOLOGO=true `
+    # SDK version
+    DOTNET_SDK_VERSION=7.0.100-rc.2.22472.26 `
+    # Enable correct mode for dotnet watch (only mode supported in a container)
+    DOTNET_USE_POLLING_FILE_WATCHER=true `
+    # Skip extraction of XML docs - generally not useful within an image/container - helps performance
+    NUGET_XMLDOC_MODE=skip `
+    # PowerShell telemetry for docker image usage
+    POWERSHELL_DISTRIBUTION_CHANNEL=PSDocker-DotnetSDK-WindowsServerCore-ltsc2019
 
 # Download MinGit
 RUN powershell -Command " `
@@ -18,8 +30,8 @@ RUN powershell -Command " `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
         }; `
-        mkdir MinGit; `
-        tar -oxzf mingit.zip -C MinGit; `
+        mkdir $Env:ProgramFiles\MinGit; `
+        tar -oxzf mingit.zip -C $Env:ProgramFiles\MinGit; `
         Remove-Item -Force mingit.zip"
 
 RUN powershell -Command " `
@@ -27,63 +39,29 @@ RUN powershell -Command " `
         $ProgressPreference = 'SilentlyContinue'; `
         `
         # Retrieve .NET SDK
-        $sdk_version = '7.0.100-rc.1.22431.12'; `
-        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.blob.core.windows.net/internal/Sdk/$sdk_version/dotnet-sdk-$sdk_version-win-x64.zip$Env:SAS_QUERY_STRING; `
-        $dotnet_sha512 = '931fef3ac59545f6017f7b890f3b15167aa51ff1d99db90b897d29897c278c81dea32730a371f7461e41eb73d1f8e422f784754f116f5fff64642b65e17e6271'; `
+        Invoke-WebRequest -OutFile dotnet.zip https://dotnetbuilds.azureedge.net/public/Sdk/$Env:DOTNET_SDK_VERSION/dotnet-sdk-$Env:DOTNET_SDK_VERSION-win-x64.zip; `
+        $dotnet_sha512 = 'cdc4bc3d75a51ba25696d394011bcc540419a7d7af32edd99d9723ceb18e0e87d2c20a813f4352ce89b45f47224a17fa8f3c058a1c310430cdc7282a80449539'; `
         if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
         }; `
-        mkdir dotnet; `
-        tar -oxzf dotnet.zip -C dotnet; `
+        tar -oxzf dotnet.zip -C $Env:ProgramFiles\dotnet ./LICENSE.txt ./ThirdPartyNotices.txt ./packs ./sdk ./sdk-manifests ./templates ./shared/Microsoft.WindowsDesktop.App; `
         Remove-Item -Force dotnet.zip; `
         `
         # Install PowerShell global tool
-        $powershell_version = '7.3.0-preview.7'; `
+        $powershell_version = '7.3.0-preview.8'; `
         Invoke-WebRequest -OutFile PowerShell.Windows.x64.$powershell_version.nupkg https://pwshtool.blob.core.windows.net/tool/$powershell_version/PowerShell.Windows.x64.$powershell_version.nupkg; `
-        $powershell_sha512 = '8f00356af4d3a70da11af33ed19e025d2e7aa796d75be1b9a23b4ff590d818a1de8bf34da8ad2dd4cb75e90ee07e2ef55d5b68b48ec7ba45a2468aac81f32313'; `
+        $powershell_sha512 = '12a591075f1c2c664430479b459c434021be4ee98d11e64f54c0366b20b51120f24fa73efe9632e8d27dd262fac4fe12275dd879a5fce1cf806eaaa20dde269b'; `
         if ((Get-FileHash PowerShell.Windows.x64.$powershell_version.nupkg -Algorithm sha512).Hash -ne $powershell_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
         }; `
-        & \dotnet\dotnet tool install --add-source . --tool-path \powershell --version $powershell_version PowerShell.Windows.x64; `
-        & \dotnet\dotnet nuget locals all --clear; `
+        & $Env:ProgramFiles\dotnet\dotnet tool install --add-source . --tool-path $Env:ProgramFiles\powershell --version $powershell_version PowerShell.Windows.x64; `
+        & $Env:ProgramFiles\dotnet\dotnet nuget locals all --clear; `
         Remove-Item -Force PowerShell.Windows.x64.$powershell_version.nupkg; `
-        Remove-Item -Path \powershell\.store\powershell.windows.x64\$powershell_version\powershell.windows.x64\$powershell_version\powershell.windows.x64.$powershell_version.nupkg -Force; `
-        `
-        # Workaround for https://github.com/dotnet/sdk/issues/18410
-        \dotnet\dotnet build-server shutdown; `
-        `
-        # Delete everything in the dotnet folder that's not needed in the SDK layer but will instead be derived from base layers
-        Get-ChildItem -Exclude 'LICENSE.txt','ThirdPartyNotices.txt','packs','sdk','sdk-manifests','templates','shared' -Path dotnet `
-            | Remove-Item -Force -Recurse; `
-        Get-ChildItem -Exclude 'Microsoft.WindowsDesktop.App' -Path dotnet\shared `
-            | Remove-Item -Force -Recurse"
-
-# SDK image
-FROM $REPO:7.0.0-rc.1-windowsservercore-ltsc2019
-
-ENV `
-    # Unset ASPNETCORE_URLS from aspnet base image
-    ASPNETCORE_URLS= `
-    # Do not generate certificate
-    DOTNET_GENERATE_ASPNET_CERTIFICATE=false `
-    # Do not show first run text
-    DOTNET_NOLOGO=true `
-    # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22431.12 `
-    # Enable correct mode for dotnet watch (only mode supported in a container)
-    DOTNET_USE_POLLING_FILE_WATCHER=true `
-    # Skip extraction of XML docs - generally not useful within an image/container - helps performance
-    NUGET_XMLDOC_MODE=skip `
-    # PowerShell telemetry for docker image usage
-    POWERSHELL_DISTRIBUTION_CHANNEL=PSDocker-DotnetSDK-WindowsServerCore-ltsc2019
+        Remove-Item -Path $Env:ProgramFiles\powershell\.store\powershell.windows.x64\$powershell_version\powershell.windows.x64\$powershell_version\powershell.windows.x64.$powershell_version.nupkg -Force;"
 
 RUN setx /M PATH "%PATH%;C:\Program Files\powershell;C:\Program Files\MinGit\cmd"
-
-COPY --from=installer ["/dotnet", "/Program Files/dotnet"]
-COPY --from=installer ["/powershell", "/Program Files/powershell"]
-COPY --from=installer ["/MinGit", "/Program Files/MinGit"]
 
 # Trigger first run experience by running arbitrary cmd
 RUN dotnet help

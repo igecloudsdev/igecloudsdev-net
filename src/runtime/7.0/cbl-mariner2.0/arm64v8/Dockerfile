@@ -1,34 +1,21 @@
 ARG REPO=mcr.microsoft.com/dotnet/runtime-deps
-
-# Installer image
-FROM $REPO:7.0.0-rc.1-cbl-mariner2.0-arm64v8 AS installer
-
-ARG SAS_QUERY_STRING
-
-# Retrieve .NET Runtime
-RUN dotnet_version=7.0.0-rc.1.22426.10 \
-    && curl -fSL --output dotnet-host.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-host-$dotnet_version-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='2567acd5243b37de2d21d9d0a26c904552385dcd48336f846fcab7dd54517c54ed8dad672cc2f1eedcaf2a294f4928b3e4c0e07e46b3acf3498d24b9f2c5806f' \
-    && echo "$dotnet_sha512  dotnet-host.rpm" | sha512sum -c - \
-    \
-    && curl -fSL --output dotnet-hostfxr.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-hostfxr-$dotnet_version-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='b77bffe064b0ae49815c66f4730fb3aec4a3ac97591249d6ff66cfc9c57f43875f2b34c7e6247d8a0e7268e2afaede9c4f74b47bf17556e647f45891af737973' \
-    && echo "$dotnet_sha512  dotnet-hostfxr.rpm" | sha512sum -c - \
-    \
-    && curl -fSL --output dotnet-runtime.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-$dotnet_version-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='9ea7507f1fd12b42e1c8764d26ff3037f41e65456b14f430f82e3dd2e5c168268ba4b1d685fa66acddafe31a3d979c0d904f2cdb2701a4fc9350be3fba8d5ad4' \
-    && echo "$dotnet_sha512  dotnet-runtime.rpm" | sha512sum -c -
-
-
-# .NET runtime image
-FROM $REPO:7.0.0-rc.1-cbl-mariner2.0-arm64v8
+FROM $REPO:7.0.0-rc.2-cbl-mariner2.0-arm64v8
 
 # .NET Runtime version
-ENV DOTNET_VERSION=7.0.0-rc.1.22426.10
+ENV DOTNET_VERSION=7.0.0-rc.2.22464.1
 
-COPY --from=installer /dotnet-host.rpm /dotnet-host.rpm
-COPY --from=installer /dotnet-hostfxr.rpm /dotnet-hostfxr.rpm
-COPY --from=installer /dotnet-runtime.rpm /dotnet-runtime.rpm
-
-RUN tdnf install -y --disablerepo=* dotnet-host.rpm dotnet-hostfxr.rpm dotnet-runtime.rpm \
+# Install .NET Runtime
+RUN curl -fSL --output dotnet-host.rpm https://dotnetbuilds.azureedge.net/public/Runtime/$DOTNET_VERSION/dotnet-host-$DOTNET_VERSION-aarch64.rpm \
+    && dotnet_sha512='3aa3205b04bb3def247c7f1200edc4bd9a0bf9b54096e2bce20d00ce88a4b65a43735bb032db30e88ea6b52d43fd325614194be4ff2b1eb61b24c64a95aee1da' \
+    && echo "$dotnet_sha512  dotnet-host.rpm" | sha512sum -c - \
+    \
+    && curl -fSL --output dotnet-hostfxr.rpm https://dotnetbuilds.azureedge.net/public/Runtime/$DOTNET_VERSION/dotnet-hostfxr-$DOTNET_VERSION-aarch64.rpm \
+    && dotnet_sha512='0b30f795a2471a8628ce8deeba495dbfe9c89515ef1b5123a2ec51203d8493e1be791efc96821e70db0bf1c655cbcc7f8f8a4199edee2f9e498b73921661dc48' \
+    && echo "$dotnet_sha512  dotnet-hostfxr.rpm" | sha512sum -c - \
+    \
+    && curl -fSL --output dotnet-runtime.rpm https://dotnetbuilds.azureedge.net/public/Runtime/$DOTNET_VERSION/dotnet-runtime-$DOTNET_VERSION-aarch64.rpm \
+    && dotnet_sha512='a7e212926513fdb8b207168bc3b5a47e4d2affab4605fdbb328a77845262dc98404423c09f723b9d542025ab653fa01ca023369f5b8d8c81eb9539a8c157b90e' \
+    && echo "$dotnet_sha512  dotnet-runtime.rpm" | sha512sum -c - \
+    \
+    && tdnf install -y --disablerepo=* dotnet-host.rpm dotnet-hostfxr.rpm dotnet-runtime.rpm \
     && rm dotnet-host.rpm dotnet-hostfxr.rpm dotnet-runtime.rpm

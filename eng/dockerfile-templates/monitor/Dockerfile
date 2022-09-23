@@ -19,7 +19,7 @@
     set urlBranch to when(find(monitorVersion, "-") >= 0 || buildVersion != monitorVersion, VARIABLES["branch"], "main") ^
     _ Use the $DOTNET_MONITOR_VERSION variable for the version folder if the build and product versions are the same. ^
     set versionFolder to when(buildVersion != monitorVersion, buildVersion, '$DOTNET_MONITOR_VERSION') ^
-    set supportsEndpointDeletion to monitorMajorMinor != "6.1"
+    set oppositeArchShort to when(ARCH_SHORT = "x64", "arm64", "x64")
 }}ARG ASPNET_REPO=mcr.microsoft.com/dotnet/aspnet
 ARG SDK_REPO=mcr.microsoft.com/dotnet/sdk
 
@@ -45,7 +45,11 @@ RUN {{InsertTemplate("../Dockerfile.linux.download-file",
     # 4. Delete everything from step 3
     && find /app -type f -print | grep -i '.*/dotnet-monitor/.*' | grep -v -i '.*/tools/{{targetFrameworkMonikerRegex}}' | xargs rm -rf \
     # To reduce image size further, remove the non-linux assemblies
-    && find /app -type f -print | grep -i '.*/dotnet-monitor/.*' | grep -i -E '/(runtimes|shims)/(win|osx)' | xargs rm -rf \
+    && find /app -type f -print | grep -i '.*/dotnet-monitor/.*' | grep -i -E '/(runtimes|shared|shims)/(win|osx)' | xargs rm -rf \
+    # To reduce image size further, remove linux assemblies that do not match the {{ARCH_SHORT}} architecture
+    && find /app -type f -print | grep -i '.*/dotnet-monitor/.*' | grep -i -E '/(runtimes|shared|shims)/(linux-{{oppositeArchShort}}|linux-musl-{{oppositeArchShort}})' | xargs rm -rf \
+    # To reduce image size further, remove symbol files
+    && find /app -type f \( -name *.pdb -o -name *.dbg \) -print | xargs rm -rf \
     # Remove all the empty directories left by the previous step
     && find /app -type d -empty -delete \
     # Allow other users to run the tool
@@ -66,9 +70,9 @@ ENV \
     COMPlus_EnableDiagnostics=0 \
     # Default Filter
     DefaultProcess__Filters__0__Key=ProcessId \
-    DefaultProcess__Filters__0__Value=1 \{{if supportsEndpointDeletion:
+    DefaultProcess__Filters__0__Value=1 \
     # Remove Unix Domain Socket before starting diagnostic port server
-    DiagnosticPort__DeleteEndpointOnStartup=true \}}
+    DiagnosticPort__DeleteEndpointOnStartup=true \
     # Logging: JSON format so that analytic platforms can get discrete entry information
     Logging__Console__FormatterName=json \
     # Logging: Use round-trip date/time format without timezone information (always logged in UTC)

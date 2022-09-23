@@ -1,20 +1,5 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
-# Installer image
-FROM $REPO:7.0.0-rc.1-alpine3.16-arm64v8 AS installer
-
-ARG SAS_QUERY_STRING
-
-# Install .NET SDK
-RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.1.22431.12/dotnet-sdk-7.0.100-rc.1.22431.12-linux-musl-arm64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='6567ff07349dad9838e3d7f755944647ce89918e94e28bf3fd953606d6c0d845516ed09c3f113064203360d09b7abe3155542f5f5b2d3e6e43019c970e802e17' \
-    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
-    && mkdir -p /usr/share/dotnet \
-    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
-    && rm dotnet.tar.gz
-
-
-# .NET SDK image
-FROM $REPO:7.0.0-rc.1-alpine3.16-arm64v8
+FROM $REPO:7.0.0-rc.2-alpine3.16-arm64v8
 
 ENV \
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -24,7 +9,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.1.22431.12 \
+    DOTNET_SDK_VERSION=7.0.100-rc.2.22472.26 \
     # Disable the invariant mode (set in base image)
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     # Enable correct mode for dotnet watch (only mode supported in a container)
@@ -40,7 +25,12 @@ RUN apk add --no-cache \
         icu-libs \
         git
 
-COPY --from=installer ["/usr/share/dotnet", "/usr/share/dotnet"]
-
-# Trigger first run experience by running arbitrary cmd
-RUN dotnet help
+# Install .NET SDK
+RUN wget -O dotnet.tar.gz https://dotnetbuilds.azureedge.net/public/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-musl-arm64.tar.gz \
+    && dotnet_sha512='411b017e367234d947718bef45d0276b3f46ef88545ae1ded78519544ee36863b76dea856ba535cea1fde9136d82532b879de19cb450b1299b50e96b88c8fb55' \
+    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
+    && rm dotnet.tar.gz \
+    # Trigger first run experience by running arbitrary cmd
+    && dotnet help

@@ -3,12 +3,10 @@ ARG REPO=mcr.microsoft.com/dotnet/runtime-deps
 # Installer image
 FROM arm32v7/buildpack-deps:jammy-curl AS installer
 
-ARG SAS_QUERY_STRING
-
 # Retrieve .NET Runtime
-RUN dotnet_version=7.0.0-rc.1.22426.10 \
-    && curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-$dotnet_version-linux-arm.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='dabff370d55a2cdf3623654f50eea950d85e7e986dda95e1beb7995dc3959ced1a1232a7dc622d3fe867e6fd12dfb074405f6761bb5ff4a83aa70a64b66de48f' \
+RUN dotnet_version=7.0.0-rc.2.22464.1 \
+    && curl -fSL --output dotnet.tar.gz https://dotnetbuilds.azureedge.net/public/Runtime/$dotnet_version/dotnet-runtime-$dotnet_version-linux-arm.tar.gz \
+    && dotnet_sha512='147753474c6b03eb7f246327c658aea5a7c980855f207a9e79530454d8b4083e37ee48db90da0e1b6fd6f025f6f7b00ae593dc74ed20e4e6c3b8ddcbcf911a7a' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /dotnet \
     && tar -oxzf dotnet.tar.gz -C /dotnet \
@@ -16,10 +14,10 @@ RUN dotnet_version=7.0.0-rc.1.22426.10 \
 
 
 # .NET runtime image
-FROM $REPO:7.0.0-rc.1-jammy-arm32v7
+FROM $REPO:7.0.0-rc.2-jammy-arm32v7
 
 # .NET Runtime version
-ENV DOTNET_VERSION=7.0.0-rc.1.22426.10
+ENV DOTNET_VERSION=7.0.0-rc.2.22464.1
 
 COPY --from=installer ["/dotnet", "/usr/share/dotnet"]
 

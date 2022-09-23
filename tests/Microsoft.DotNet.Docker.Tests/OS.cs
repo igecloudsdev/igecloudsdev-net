@@ -8,7 +8,6 @@ namespace Microsoft.DotNet.Docker.Tests
     {
         // Alpine
         public const string Alpine = "alpine";
-        public const string Alpine315 = $"{Alpine}3.15";
         public const string Alpine316 = $"{Alpine}3.16";
 
         // Debian
@@ -31,6 +30,7 @@ namespace Microsoft.DotNet.Docker.Tests
         public const string Focal = "focal";
         public const string Jammy = "jammy";
         public const string JammyChiseled = "jammy-chiseled";
+        public const string UbuntuChiseled = "ubuntu-chiseled";
 
         // Windows
         public const string NanoServer = "nanoserver";

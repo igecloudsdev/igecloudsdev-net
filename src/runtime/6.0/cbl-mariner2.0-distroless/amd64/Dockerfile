@@ -12,9 +12,9 @@ RUN tdnf install -y \
     && tdnf clean all
 
 # Retrieve .NET Runtime
-RUN dotnet_version=6.0.9-servicing.22419.5 \
-    && curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-6.0.9-linux-x64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='a6df2cfef73047247bd36f51eaf696f616c6aa9b428e42f219bf91dcf05c03dff817a8ec826740002c8aa83df2fce8a7ace562ad2e2956789542f0b8ab8b1173' \
+RUN dotnet_version=6.0.10-servicing.22469.10 \
+    && curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-6.0.10-linux-x64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='4dbca555fd41f58190daf672058294806b0d5cb19635eaf2f933b85e94a25c307e0ea6da23cb2244bb2817adf9717e9697e21d2aea80481acaa5c3cc77e4ec2c' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet \
@@ -25,10 +25,10 @@ RUN mkdir /dotnet-symlink \
 
 
 # .NET runtime image
-FROM $REPO:6.0.9-cbl-mariner2.0-distroless-amd64
+FROM $REPO:6.0.10-cbl-mariner2.0-distroless-amd64
 
 # .NET Runtime version
-ENV DOTNET_VERSION=6.0.9-servicing.22419.5
+ENV DOTNET_VERSION=6.0.10-servicing.22469.10
 
 COPY --from=installer ["/usr/share/dotnet", "/usr/share/dotnet"]
 COPY --from=installer ["/dotnet-symlink", "/usr/bin"]
