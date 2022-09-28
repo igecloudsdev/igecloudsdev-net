@@ -1,4 +1,19 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
+# Installer image
+FROM arm32v7/buildpack-deps:jammy-curl AS installer
+
+ARG SAS_QUERY_STRING
+
+# Install .NET SDK
+RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.2.22476.6/dotnet-sdk-7.0.100-rc.2.22476.6-linux-arm.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='93752fb6a340eec35083c0528b57f2f5544abb1b7fe409a3149e8f30d4fc9ec3494b64b1ff9991793e7d477601123e8b66dbeb2cc322fecbc0be0788a48a991e' \
+    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
+    && mkdir -p /usr/share/dotnet \
+    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
+    && rm dotnet.tar.gz
+
+
+# .NET SDK image
 FROM $REPO:7.0.0-rc.2-jammy-arm32v7
 
 ENV \
@@ -9,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.2.22472.26 \
+    DOTNET_SDK_VERSION=7.0.100-rc.2.22476.6 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance
@@ -24,15 +39,10 @@ RUN apt-get update \
         wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Install .NET SDK
-RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.azureedge.net/public/Sdk/$DOTNET_SDK_VERSION/dotnet-sdk-$DOTNET_SDK_VERSION-linux-arm.tar.gz \
-    && dotnet_sha512='91f696dd16b8cb12b7393a506fda54cd6f89eadeb0f036ceba72c4bcb20794036e688b1bedb74a810a4079d6ff4e2d8e276198f16e8874856a6908d1669f5cdb' \
-    && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
-    && mkdir -p /usr/share/dotnet \
-    && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
-    && rm dotnet.tar.gz \
-    # Trigger first run experience by running arbitrary cmd
-    && dotnet help
+COPY --from=installer ["/usr/share/dotnet", "/usr/share/dotnet"]
+
+# Trigger first run experience by running arbitrary cmd
+RUN dotnet help
 
 # Install PowerShell global tool
 RUN powershell_version=7.3.0-preview.8 \
