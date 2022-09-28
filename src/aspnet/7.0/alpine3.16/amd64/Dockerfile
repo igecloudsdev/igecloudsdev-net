@@ -1,15 +1,23 @@
 ARG REPO=mcr.microsoft.com/dotnet/runtime
+
+# Installer image
+FROM $REPO:7.0.0-rc.2-alpine3.16-amd64 AS installer
+
+ARG SAS_QUERY_STRING
+
+# Retrieve ASP.NET Core
+RUN aspnetcore_version=7.0.0-rc.2.22476.2 \
+    && wget -O aspnetcore.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-$aspnetcore_version-linux-musl-x64.tar.gz$SAS_QUERY_STRING \
+    && aspnetcore_sha512='b2faa275e8a096ae308e82b653ef8542de171a25c461ccf7744dda4421372def544c7e60bea36c547ce16663e6f26a3f52df30489fc770d8ab819ba58dc00cb4' \
+    && echo "$aspnetcore_sha512  aspnetcore.tar.gz" | sha512sum -c - \
+    && tar -oxzf aspnetcore.tar.gz ./shared/Microsoft.AspNetCore.App \
+    && rm aspnetcore.tar.gz
+
+
+# ASP.NET Core image
 FROM $REPO:7.0.0-rc.2-alpine3.16-amd64
 
-# .NET globalization APIs will use invariant mode by default because DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true is set
-# by the base runtime-deps image. See https://aka.ms/dotnet-globalization-alpine-containers for more information.
-
 # ASP.NET Core version
-ENV ASPNET_VERSION=7.0.0-rc.2.22464.13
+ENV ASPNET_VERSION=7.0.0-rc.2.22476.2
 
-# Install ASP.NET Core
-RUN wget -O aspnetcore.tar.gz https://dotnetbuilds.azureedge.net/public/aspnetcore/Runtime/$ASPNET_VERSION/aspnetcore-runtime-$ASPNET_VERSION-linux-musl-x64.tar.gz \
-    && aspnetcore_sha512='a55f1ce151a1505e588b4e95bf7f64fa6e59bd70733df85db252d1d124dc5a232c952bd8501af8628dd100fa5902b392a3a5b49c69dfe6a785d6e197ff7f41e1' \
-    && echo "$aspnetcore_sha512  aspnetcore.tar.gz" | sha512sum -c - \
-    && tar -oxzf aspnetcore.tar.gz -C /usr/share/dotnet ./shared/Microsoft.AspNetCore.App \
-    && rm aspnetcore.tar.gz
+COPY --from=installer ["/shared/Microsoft.AspNetCore.App", "/usr/share/dotnet/shared/Microsoft.AspNetCore.App"]
