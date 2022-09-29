@@ -5,8 +5,8 @@ FROM $REPO:6.0.10-alpine3.16-arm64v8 AS installer
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.402-servicing.22470.36/dotnet-sdk-6.0.402-linux-musl-arm64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='f5b629f7d31c893b1a670e1c0b84223a6782cf5fde7a0cbe42b016afb0afd10cedf433fedd3e8ab39238275b7822f26dd8242667b64efa7baed872918dee468e' \
+RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.402-servicing.22476.26/dotnet-sdk-6.0.402-linux-musl-arm64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='78aa8493421c7debbe8446a1a46bb2733c27d59f8bac4eb7dc00268092ee4f5025d56914c45b3169b8fb466aab2f8274980dc3b6639b6bac5122559f607ffe49' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -24,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=6.0.402-servicing.22470.36 \
+    DOTNET_SDK_VERSION=6.0.402-servicing.22476.26 \
     # Disable the invariant mode (set in base image)
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     # Enable correct mode for dotnet watch (only mode supported in a container)

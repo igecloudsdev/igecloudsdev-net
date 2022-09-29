@@ -5,8 +5,8 @@ FROM arm32v7/buildpack-deps:jammy-curl AS installer
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.402-servicing.22470.36/dotnet-sdk-6.0.402-linux-arm.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='972dd470dede8023d1deb2c5b7b5afa7a4bd6de5437a536f7711c616343dcc943425ac35136c9411dbb2c5bff2e7a01ee74d1890cd88018750b1e8f722d13e85' \
+RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.402-servicing.22476.26/dotnet-sdk-6.0.402-linux-arm.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='98b275af781ac7be20e22736d601ea667161640703b9d430340e517fb2c1bdcd6d06d5eb4f374cab1f6e29c9135005050ec89dd8dcf0ec97e7b0d9912e52f988' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -24,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=6.0.402-servicing.22470.36 \
+    DOTNET_SDK_VERSION=6.0.402-servicing.22476.26 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

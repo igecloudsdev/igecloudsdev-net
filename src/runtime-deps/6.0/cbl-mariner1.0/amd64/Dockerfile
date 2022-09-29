@@ -3,9 +3,9 @@ FROM mcr.microsoft.com/cbl-mariner/base/core:1.0 AS installer
 
 ARG SAS_QUERY_STRING
 
-RUN dotnet_version=6.0.10-servicing.22469.10 \
+RUN dotnet_version=6.0.10-servicing.22476.5 \
     && curl -fSL --output dotnet-runtime-deps.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-deps-6.0.10-cm.1-x64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='67e8a53e9700d4b7769c6ef383cc9bf2754821ea4498a5e1dce15d65a56ac4c3c3779cee676fe916d46108ca8d9bc25494face74d7f28c5919a6d0d62e790ce0' \
+    && dotnet_sha512='19429ed1ff1611c33a55f6a71abb0a0ae35c17330ba95c28fb54330b27f04e71bbba2652b63bb6db2ee5d03294b67eb954c2337a435b5e3ad90d7923da6e59b8' \
     && echo "$dotnet_sha512  dotnet-runtime-deps.rpm" | sha512sum -c -
 FROM mcr.microsoft.com/cbl-mariner/base/core:1.0
 

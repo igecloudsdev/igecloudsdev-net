@@ -6,17 +6,17 @@ FROM $REPO:6.0.10-cbl-mariner2.0-arm64v8 AS installer
 ARG SAS_QUERY_STRING
 
 # Retrieve .NET Runtime
-RUN dotnet_version=6.0.10-servicing.22469.10 \
+RUN dotnet_version=6.0.10-servicing.22476.5 \
     && curl -fSL --output dotnet-host.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-host-6.0.10-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='1570384969bbe1aa6a0eb018cc1247b05e62decc9225fd36630abdddee1ce6f39e818b947c134000ab03c887c4ae20cd520d21d382c7dfb04a6bb40d88e74439' \
+    && dotnet_sha512='1f23ec3103a9ece4dea932f4cb0fa0d5591b3e1daad401fe5f113c1a1f4c0c04a63adbbb75a34c014c34708421d75c4f803de088c2504c20ef1bcc855071d541' \
     && echo "$dotnet_sha512  dotnet-host.rpm" | sha512sum -c - \
     \
     && curl -fSL --output dotnet-hostfxr.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-hostfxr-6.0.10-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='b46cced4c5dd1bc262cc6ba0287893d450c3ee80a0a3962c90eadec0d2c8bd69d7dad88d6d3aebb9a42194a7479aa58207e0f977355e10d74dc9a55246a6d49e' \
+    && dotnet_sha512='0136f4f9fadf6c18d775ff340e8b0cb2b26e4a1ab3b2ae523bc89f8d271e47579b607be8ec7b79530c7d9a816f9488a5f26e4bf2fd5346c065c82f902a46f86a' \
     && echo "$dotnet_sha512  dotnet-hostfxr.rpm" | sha512sum -c - \
     \
     && curl -fSL --output dotnet-runtime.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-6.0.10-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='d738daf822abba83938ad7a071db5658539d42711c1ca89cf9845c73c0637d456b9c1aa486f9153245ce1486618af15e59feb45bb3782e114db22cbdee7a15db' \
+    && dotnet_sha512='49c0b71054437cec5fe9feed87a8710f766dea1def03e33fa4d0c96998427b06cdf6164125c2ad1a3b09999da4b89fdbac496ea1e91490923a1270c56f97c043' \
     && echo "$dotnet_sha512  dotnet-runtime.rpm" | sha512sum -c -
 
 
@@ -24,7 +24,7 @@ RUN dotnet_version=6.0.10-servicing.22469.10 \
 FROM $REPO:6.0.10-cbl-mariner2.0-arm64v8
 
 # .NET Runtime version
-ENV DOTNET_VERSION=6.0.10-servicing.22469.10
+ENV DOTNET_VERSION=6.0.10-servicing.22476.5
 
 COPY --from=installer /dotnet-host.rpm /dotnet-host.rpm
 COPY --from=installer /dotnet-hostfxr.rpm /dotnet-hostfxr.rpm
