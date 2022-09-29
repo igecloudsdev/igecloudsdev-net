@@ -8,5 +8,17 @@
     <add key="dotnet7" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet7/nuget/v3/index.json" />
     <add key="dotnet7-rc1" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/7.0.100-rc.1.22415.4-shipping/nuget/v3/index.json" />
     <add key="dotnet-public" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json" />
+    <add key="dotnet6_0_internal" value="https://pkgs.dev.azure.com/dnceng/internal/_packaging/6.0.402-servicing.22476.26-shipping/nuget/v3/index.json" />
+    <add key="dotnet7_0_internal" value="https://pkgs.dev.azure.com/dnceng/internal/_packaging/7.0.100-rc.2.22477.23-shipping/nuget/v3/index.json" />
   </packageSources>
+  <packageSourceCredentials>
+    <dotnet6_0_internal>
+      <add key="Username" value="dotnet" />
+      <add key="ClearTextPassword" value="%NuGetFeedPassword%" />
+    </dotnet6_0_internal>
+    <dotnet7_0_internal>
+      <add key="Username" value="dotnet" />
+      <add key="ClearTextPassword" value="%NuGetFeedPassword%" />
+    </dotnet7_0_internal>
+  </packageSourceCredentials>
 </configuration>
