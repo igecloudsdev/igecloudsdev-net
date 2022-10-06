@@ -3,12 +3,12 @@
     "path": "README.md",
     "templatePath": "eng/readme-templates/README.md"
   },
-  "registry": "mcr.microsoft.com",
+  "registry": "msint.azurecr.io",
   "variables": {
-    "syndicatedRuntimeDepsRepo": "dotnet/core-nightly/runtime-deps",
-    "syndicatedRuntimeRepo": "dotnet/core-nightly/runtime",
-    "syndicatedAspnetRepo": "dotnet/core-nightly/aspnet",
-    "syndicatedSdkRepo": "dotnet/core-nightly/sdk"
+    "syndicatedRuntimeDepsRepo": "private/dotnet/core-nightly/runtime-deps",
+    "syndicatedRuntimeRepo": "private/dotnet/core-nightly/runtime",
+    "syndicatedAspnetRepo": "private/dotnet/core-nightly/aspnet",
+    "syndicatedSdkRepo": "private/dotnet/core-nightly/sdk"
   },
   "includes": [
     "manifest.versions.json"
@@ -16,7 +16,7 @@
   "repos": [
     {
       "id": "runtime-deps",
-      "name": "dotnet/nightly/runtime-deps",
+      "name": "private/dotnet/nightly/runtime-deps",
       "readmes": [
         {
           "path": "README.runtime-deps.md",
@@ -1087,7 +1087,7 @@
     },
     {
       "id": "runtime",
-      "name": "dotnet/nightly/runtime",
+      "name": "private/dotnet/nightly/runtime",
       "readmes": [
         {
           "path": "README.runtime.md",
@@ -2529,7 +2529,7 @@
     },
     {
       "id": "aspnet",
-      "name": "dotnet/nightly/aspnet",
+      "name": "private/dotnet/nightly/aspnet",
       "readmes": [
         {
           "path": "README.aspnet.md",
@@ -4001,7 +4001,7 @@
     },
     {
       "id": "sdk",
-      "name": "dotnet/nightly/sdk",
+      "name": "private/dotnet/nightly/sdk",
       "readmes": [
         {
           "path": "README.sdk.md",
@@ -5210,7 +5210,7 @@
     },
     {
       "id": "monitor",
-      "name": "dotnet/nightly/monitor",
+      "name": "private/dotnet/nightly/monitor",
       "readmes": [
         {
           "path": "README.monitor.md",

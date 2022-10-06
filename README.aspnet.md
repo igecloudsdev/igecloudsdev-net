@@ -2,14 +2,14 @@
 
 **The images from the dotnet/nightly repositories include last-known-good (LKG) builds for the next release of [.NET](https://github.com/dotnet/core).**
 
-**See [dotnet](https://hub.docker.com/_/microsoft-dotnet-aspnet/) for images with official releases of [.NET](https://github.com/dotnet/core).**
+**See [dotnet](https://hub.docker.com/_/microsoft-private-dotnet-aspnet/) for images with official releases of [.NET](https://github.com/dotnet/core).**
 
 # Featured Tags
 
 * `7.0` (Standard Support)
-  * `docker pull mcr.microsoft.com/dotnet/nightly/aspnet:7.0`
+  * `docker pull msint.azurecr.io/private/dotnet/nightly/aspnet:7.0`
 * `6.0` (Long-Term Support)
-  * `docker pull mcr.microsoft.com/dotnet/nightly/aspnet:6.0`
+  * `docker pull msint.azurecr.io/private/dotnet/nightly/aspnet:6.0`
 
 # About
 
@@ -130,7 +130,7 @@ Tag | Dockerfile
 7.0.0-windowsservercore-ltsc2019, 7.0-windowsservercore-ltsc2019 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/src/aspnet/7.0/windowsservercore-ltsc2019/amd64/Dockerfile)
 6.0.11-windowsservercore-ltsc2019, 6.0-windowsservercore-ltsc2019 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/src/aspnet/6.0/windowsservercore-ltsc2019/amd64/Dockerfile)
 
-You can retrieve a list of all available tags for dotnet/nightly/aspnet at https://mcr.microsoft.com/v2/dotnet/nightly/aspnet/tags/list.
+You can retrieve a list of all available tags for private/dotnet/nightly/aspnet at https://mcr.microsoft.com/v2/private/dotnet/nightly/aspnet/tags/list.
 <!--End of generated tags-->
 
 For tags contained in the old dotnet/core-nightly/aspnet repository, you can retrieve a list of those tags at https://mcr.microsoft.com/v2/dotnet/core-nightly/aspnet/tags/list.

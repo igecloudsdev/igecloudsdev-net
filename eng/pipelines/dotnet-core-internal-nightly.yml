@@ -34,10 +34,10 @@ variables:
   value: false
 - ${{ if parameters.isTest }}:
   - name: publishRepoPrefix
-    value: test/internal/private/
+    value: test/internal/
 - ${{ else }}:
   - name: publishRepoPrefix
-    value: internal/private/
+    value: internal/
 
 stages:
 - template: stages/build-test-publish-repo.yml

@@ -4,7 +4,7 @@
 
 **The images from the dotnet/nightly repositories include last-known-good (LKG) builds for the next release of [.NET](https://github.com/dotnet/core).**
 
-**See [dotnet](https://mcr.microsoft.com/product/dotnet/runtime/about) for images with official releases of [.NET](https://github.com/dotnet/core).**
+**See [dotnet](https://mcr.microsoft.com/product/private/dotnet/runtime/about) for images with official releases of [.NET](https://github.com/dotnet/core).**
 
 This image contains the .NET runtimes and libraries and is optimized for running .NET apps in production.
 
@@ -13,9 +13,9 @@ Watch [discussions](https://github.com/dotnet/dotnet-docker/discussions/categori
 ## Featured Tags
 
 * `7.0` (Standard Support)
-  * `docker pull mcr.microsoft.com/dotnet/nightly/runtime:7.0`
+  * `docker pull msint.azurecr.io/private/dotnet/nightly/runtime:7.0`
 * `6.0` (Long-Term Support)
-  * `docker pull mcr.microsoft.com/dotnet/nightly/runtime:6.0`
+  * `docker pull msint.azurecr.io/private/dotnet/nightly/runtime:6.0`
 
 ## Related Repos
 

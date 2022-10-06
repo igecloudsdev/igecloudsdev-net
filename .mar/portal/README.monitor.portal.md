@@ -4,7 +4,7 @@
 
 **The images from the dotnet/nightly repositories include last-known-good (LKG) builds for the next release of [.NET](https://github.com/dotnet/core).**
 
-**See [dotnet](https://mcr.microsoft.com/product/dotnet/monitor/about) for images with official releases of [.NET](https://github.com/dotnet/core).**
+**See [dotnet](https://mcr.microsoft.com/product/private/dotnet/monitor/about) for images with official releases of [.NET](https://github.com/dotnet/core).**
 
 This image contains the .NET Monitor tool.
 
@@ -15,9 +15,9 @@ Watch [discussions](https://github.com/dotnet/dotnet-docker/discussions/categori
 ## Featured Tags
 
 * `7` (Standard Support)
-  * `docker pull mcr.microsoft.com/dotnet/nightly/monitor:7`
+  * `docker pull msint.azurecr.io/private/dotnet/nightly/monitor:7`
 * `6` (Long-Term Support)
-  * `docker pull mcr.microsoft.com/dotnet/nightly/monitor:6`
+  * `docker pull msint.azurecr.io/private/dotnet/nightly/monitor:6`
 
 ## Related Repos
 

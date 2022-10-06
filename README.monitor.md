@@ -2,14 +2,14 @@
 
 **The images from the dotnet/nightly repositories include last-known-good (LKG) builds for the next release of [.NET](https://github.com/dotnet/core).**
 
-**See [dotnet](https://hub.docker.com/_/microsoft-dotnet-monitor/) for images with official releases of [.NET](https://github.com/dotnet/core).**
+**See [dotnet](https://hub.docker.com/_/microsoft-private-dotnet-monitor/) for images with official releases of [.NET](https://github.com/dotnet/core).**
 
 # Featured Tags
 
 * `7` (Standard Support)
-  * `docker pull mcr.microsoft.com/dotnet/nightly/monitor:7`
+  * `docker pull msint.azurecr.io/private/dotnet/nightly/monitor:7`
 * `6` (Long-Term Support)
-  * `docker pull mcr.microsoft.com/dotnet/nightly/monitor:6`
+  * `docker pull msint.azurecr.io/private/dotnet/nightly/monitor:6`
 
 # About
 
@@ -65,7 +65,7 @@ Tags | Dockerfile | OS Version
 6.3.0-ubuntu-chiseled-arm64v8, 6.3-ubuntu-chiseled-arm64v8, 6-ubuntu-chiseled-arm64v8, 6.3.0-ubuntu-chiseled, 6.3-ubuntu-chiseled, 6-ubuntu-chiseled | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/src/monitor/6.3/ubuntu-chiseled/arm64v8/Dockerfile) | Ubuntu 22.04
 6.2.2-alpine-arm64v8, 6.2-alpine-arm64v8, 6.2.2-alpine, 6.2-alpine, 6.2.2, 6.2 | [Dockerfile](https://github.com/dotnet/dotnet-docker/blob/nightly/src/monitor/6.2/alpine/arm64v8/Dockerfile) | Alpine 3.16
 
-You can retrieve a list of all available tags for dotnet/nightly/monitor at https://mcr.microsoft.com/v2/dotnet/nightly/monitor/tags/list.
+You can retrieve a list of all available tags for private/dotnet/nightly/monitor at https://mcr.microsoft.com/v2/private/dotnet/nightly/monitor/tags/list.
 <!--End of generated tags-->
 
 *Tags not listed in the table above are not supported. See the [Supported Tags Policy](https://github.com/dotnet/dotnet-docker/blob/main/documentation/supported-tags.md)*
