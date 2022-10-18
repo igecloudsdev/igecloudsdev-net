@@ -9,6 +9,7 @@ parameters:
   testMatrixCustomBuildLegGroupArgs: ""
   customCopyBaseImagesInitSteps: []
   customBuildInitSteps: []
+  customBuildCleanupSteps: []
   customTestInitSteps: []
   customPublishInitSteps: []
   windowsAmdBuildJobTimeout: 60
@@ -28,6 +29,7 @@ stages:
     testMatrixCustomBuildLegGroupArgs: ${{ parameters.testMatrixCustomBuildLegGroupArgs }}
     customCopyBaseImagesInitSteps: ${{ parameters.customCopyBaseImagesInitSteps}}
     customBuildInitSteps: ${{ parameters.customBuildInitSteps }}
+    customBuildCleanupSteps: ${{ parameters.customBuildCleanupSteps }}
     customTestInitSteps: ${{ parameters.customTestInitSteps }}
     customPublishInitSteps:
     - pwsh: |

@@ -5,6 +5,7 @@ parameters:
   dockerClientOS: null
   buildJobTimeout: 60
   customInitSteps: []
+  customCleanupSteps: []
   noCache: false
   internalProjectName: null
   publicProjectName: null
@@ -13,10 +14,8 @@ parameters:
 
 jobs:
 - job: ${{ parameters.name }}
-  condition: and(${{ parameters.matrix }}, not(canceled()), in(dependencies.PreBuildValidation.result, 'Succeeded', 'SucceededWithIssues', 'Skipped'))
+  condition: and(${{ parameters.matrix }}, not(canceled()))
   dependsOn:
-  - PreBuildValidation
-  - CopyBaseImages
   - GenerateBuildMatrix
   pool: ${{ parameters.pool }}
   strategy:
@@ -174,6 +173,7 @@ jobs:
     - template: ${{ format('../steps/test-images-{0}-client.yml', parameters.dockerClientOS) }}
       parameters:
         condition: ne(variables.testScriptPath, '')
+  - ${{ parameters.customCleanupSteps }}
   - template: ${{ format('../steps/cleanup-docker-{0}.yml', parameters.dockerClientOS) }}
   - ${{ if and(eq(variables['System.TeamProject'], parameters.internalProjectName), ne(variables['Build.Reason'], 'PullRequest')) }}:
     - publish: $(sbomDirectory)

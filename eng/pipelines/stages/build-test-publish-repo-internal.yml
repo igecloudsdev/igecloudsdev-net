@@ -1,0 +1,16 @@
+parameters:
+  internalProjectName: null
+  publicProjectName: null
+
+stages:
+- template: stages/build-test-publish-repo.yml
+  parameters:
+    internalProjectName: ${{ parameters.internalProjectName }}
+    publicProjectName: ${{ parameters.publicProjectName }}
+    ${{ if variables['Agent.OS'] == 'Windows' }}:
+      customBuildInitSteps:
+      - script: $(engPath)/Connect-MsInt.ps1
+        displayName: Log into internal ACR
+      customBuildCleanupSteps:
+      - script: $(engPath)/Disconnect-MsInt.ps1
+        displayName: Log out of internal ACR

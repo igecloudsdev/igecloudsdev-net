@@ -22,6 +22,7 @@ resources:
     type: github
     endpoint: dotnet
     name: dotnet/dotnet-docker-internal
+    ref: refs/heads/private
 
 variables:
 - template: variables/internal-core.yml
@@ -40,7 +41,7 @@ variables:
     value: internal/
 
 stages:
-- template: stages/build-test-publish-repo.yml
+- template: stages/build-test-publish-repo-internal.yml
   parameters:
     internalProjectName: ${{ variables.internalProjectName }}
     publicProjectName: ${{ variables.publicProjectName }}
