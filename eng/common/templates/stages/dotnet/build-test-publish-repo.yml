@@ -67,8 +67,7 @@ stages:
       ${{ elseif eq(variables['System.TeamProject'], parameters.publicProjectName) }}:
         vmImage: $(defaultLinuxAmd64PoolImage)
       ${{ elseif eq(variables['System.TeamProject'], parameters.internalProjectName) }}:
-        name: NetCore1ESPool-Internal
-        demands: ImageOverride -equals Build.Ubuntu.1804.Amd64
+        vmImage: $(defaultLinuxAmd64PoolImage)
     
     linuxArm64Pool:
       ${{ if eq(variables['System.TeamProject'], parameters.publicProjectName) }}:

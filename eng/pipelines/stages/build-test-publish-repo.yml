@@ -44,6 +44,7 @@ stages:
           $imageBuilderBuildArgs += " --build-arg SAS_QUERY_STRING='$sasQueryString'"
         }
         echo "##vso[task.setvariable variable=imageBuilderBuildArgs]$imageBuilderBuildArgs"
+        echo "##vso[task.setvariable variable=app_DotnetDockerMsIntRegistry_client_secret]$(app-DotnetDockerMsIntRegistry-client-secret)"
       displayName: Set Custom Build Variables
     - template: ../../../pipelines/steps/set-custom-test-variables.yml
     - template: ../../../pipelines/steps/set-base-image-override-options.yml
