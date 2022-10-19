@@ -2,12 +2,12 @@ ARG ASPNET_REPO=mcr.microsoft.com/dotnet/aspnet
 ARG SDK_REPO=mcr.microsoft.com/dotnet/sdk
 
 # Installer image
-FROM $SDK_REPO:7.0.100-rc.2-alpine3.16-arm64v8 AS installer
+FROM $SDK_REPO:7.0.100-alpine3.16-arm64v8 AS installer
 
 # Install .NET Monitor
-ENV DOTNET_MONITOR_VERSION=7.0.0-rc.1.22477.3
-RUN wget -O dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg https://dotnetbuilds.azureedge.net/public/diagnostics/monitor/$DOTNET_MONITOR_VERSION/dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg \
-    && dotnetmonitor_sha512='cc58adc53d3b0f5a533f488829ad82cdb4bb8a71937f7e7d8bfc7160388ffca1c158bc47ddfc8195feab0a3232c51abb66e44c83c1f660de6cbbf9a7883db4e5' \
+ENV DOTNET_MONITOR_VERSION=7.0.0
+RUN wget -O dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg https://dotnetbuilds.azureedge.net/public/diagnostics/monitor/7.0.0-rtm.22518.2/dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg \
+    && dotnetmonitor_sha512='d3e767d58268bfee5cfa8551a21d8e108f48fbf9ad14f660ba99da4bd76492251201af3037e8cb5a1dc8cba33a9b677783b5c99e0f2108b0ba8c5139ee2b2132' \
     && echo "$dotnetmonitor_sha512  dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg" | sha512sum -c - \
     && dotnet tool install dotnet-monitor --tool-path /app --add-source / --version $DOTNET_MONITOR_VERSION --framework net7.0 --no-cache \
     # To reduce image size, remove all non-net7.0 TFMs
@@ -32,7 +32,7 @@ RUN wget -O dotnet-monitor.$DOTNET_MONITOR_VERSION.nupkg https://dotnetbuilds.az
 
 
 # Monitor image
-FROM $ASPNET_REPO:7.0.0-rc.2-alpine3.16-arm64v8
+FROM $ASPNET_REPO:7.0.0-alpine3.16-arm64v8
 
 WORKDIR /app
 COPY --from=installer /app .
@@ -47,6 +47,8 @@ ENV \
     DefaultProcess__Filters__0__Value=1 \
     # Remove Unix Domain Socket before starting diagnostic port server
     DiagnosticPort__DeleteEndpointOnStartup=true \
+    # Server GC mode
+    DOTNET_gcServer=1 \
     # Logging: JSON format so that analytic platforms can get discrete entry information
     Logging__Console__FormatterName=json \
     # Logging: Use round-trip date/time format without timezone information (always logged in UTC)

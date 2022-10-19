@@ -12,9 +12,9 @@ RUN powershell -Command `
         $ErrorActionPreference = 'Stop'; `
         $ProgressPreference = 'SilentlyContinue'; `
         `
-        $aspnetcore_version = '7.0.0-rc.2.22476.2'; `
-        Invoke-WebRequest -OutFile aspnetcore.zip https://dotnetbuilds.blob.core.windows.net/internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-$aspnetcore_version-win-x64.zip$Env:SAS_QUERY_STRING; `
-        $aspnetcore_sha512 = '94bf1aac7390770a666f9e925856dd568fb8477366aa216241023b6e9b2d7e68a8decd8e2a0787dcd8606556498789d208ca8e10bd80fbe312ada36649224aaa'; `
+        $aspnetcore_version = '7.0.0-rtm.22517.16'; `
+        Invoke-WebRequest -OutFile aspnetcore.zip https://dotnetbuilds.blob.core.windows.net/internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-7.0.0-win-x64.zip$Env:SAS_QUERY_STRING; `
+        $aspnetcore_sha512 = 'a95579a7c6633d3bd0842fb230d645f42a5a393a2caf3a88a104e45391fe598f7de74938417e287ca120d55d68d73fd4a5b6ec9bb184eca1f85efe4234226cce'; `
         if ((Get-FileHash aspnetcore.zip -Algorithm sha512).Hash -ne $aspnetcore_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -26,9 +26,9 @@ RUN powershell -Command `
 
 
 # ASP.NET Core image
-FROM $REPO:7.0.0-rc.2-nanoserver-1809
+FROM $REPO:7.0.0-nanoserver-1809
 
 # ASP.NET Core version
-ENV ASPNET_VERSION=7.0.0-rc.2.22476.2
+ENV ASPNET_VERSION=7.0.0-rtm.22517.16
 
 COPY --from=installer ["/dotnet/shared/Microsoft.AspNetCore.App", "/Program Files/dotnet/shared/Microsoft.AspNetCore.App"]

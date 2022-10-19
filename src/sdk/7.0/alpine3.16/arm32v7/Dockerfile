@@ -1,12 +1,12 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
 # Installer image
-FROM $REPO:7.0.0-rc.2-alpine3.16-arm32v7 AS installer
+FROM $REPO:7.0.0-alpine3.16-arm32v7 AS installer
 
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.2.22477.23/dotnet-sdk-7.0.100-rc.2.22477.23-linux-musl-arm.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='44e5c0619ff28075ca86d5e95497c82411dac18c44c9874a96d749b145e0e7bde9f6fc53cddcaa295a84c418d8b529b9a8933218c4a141b0fdc8b3614c9c6fd7' \
+RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rtm.22518.5/dotnet-sdk-7.0.100-linux-musl-arm.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='764110cef51a08509026d3a88d5e3fa155273241bc33c56aa54780f6a1810454baed5fb82a3b81e376354bcae41ffff58d197b8e2598defaba151589b9520893' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -14,7 +14,7 @@ RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sd
 
 
 # .NET SDK image
-FROM $REPO:7.0.0-rc.2-alpine3.16-arm32v7
+FROM $REPO:7.0.0-alpine3.16-arm32v7
 
 ENV \
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -24,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.2.22477.23 \
+    DOTNET_SDK_VERSION=7.0.100-rtm.22518.5 \
     # Disable the invariant mode (set in base image)
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     # Enable correct mode for dotnet watch (only mode supported in a container)

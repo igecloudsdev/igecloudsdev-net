@@ -5,8 +5,8 @@ FROM amd64/buildpack-deps:jammy-curl AS installer
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rc.2.22477.23/dotnet-sdk-7.0.100-rc.2.22477.23-linux-x64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='22db5d1d16f6fcedfc46f87896920425b5d9b61d09c47d254d6ac731c6d853657882b21faf21f313ed20b33e6331d01b9f723b2c586f0e0cf5acc5ed570b0260' \
+RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rtm.22518.5/dotnet-sdk-7.0.100-linux-x64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='95afdeacef25682b0c8c977f9508756bc77760bb085bccd2d9200a7a6c253efecc300575660f0188b0af3d4a6031cfb547616de3e8b653f913eea49ddda4dfa9' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -14,7 +14,7 @@ RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/
 
 
 # .NET SDK image
-FROM $REPO:7.0.0-rc.2-jammy-amd64
+FROM $REPO:7.0.0-jammy-amd64
 
 ENV \
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -24,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rc.2.22477.23 \
+    DOTNET_SDK_VERSION=7.0.100-rtm.22518.5 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

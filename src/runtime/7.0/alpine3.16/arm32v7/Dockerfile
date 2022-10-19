@@ -1,14 +1,14 @@
 ARG REPO=mcr.microsoft.com/dotnet/runtime-deps
 
 # Installer image
-FROM $REPO:7.0.0-rc.2-alpine3.16-arm32v7 AS installer
+FROM $REPO:7.0.0-alpine3.16-arm32v7 AS installer
 
 ARG SAS_QUERY_STRING
 
 # Retrieve .NET Runtime
-RUN dotnet_version=7.0.0-rc.2.22472.3 \
-    && wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-$dotnet_version-linux-musl-arm.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='a18510d2db32bfd917b61e6c0aceb852eb9847f1bc9c228cb3057bcbcf2fe1456ef575bceca44e8dce0e8dc2ae079cdb4fdc293ffd1b3a38d7c07088778ad789' \
+RUN dotnet_version=7.0.0-rtm.22513.8 \
+    && wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-7.0.0-linux-musl-arm.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='f7c6a655aa3e00b3f71fda2f4ad39536bbebdbf538f1f95e75fac7bbf39c347caba4ec4a8f8752e5165033425024691452c984cfaadf8bb051b3e39be3b42536' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /dotnet \
     && tar -oxzf dotnet.tar.gz -C /dotnet \
@@ -16,10 +16,10 @@ RUN dotnet_version=7.0.0-rc.2.22472.3 \
 
 
 # .NET runtime image
-FROM $REPO:7.0.0-rc.2-alpine3.16-arm32v7
+FROM $REPO:7.0.0-alpine3.16-arm32v7
 
 # .NET Runtime version
-ENV DOTNET_VERSION=7.0.0-rc.2.22472.3
+ENV DOTNET_VERSION=7.0.0-rtm.22513.8
 
 COPY --from=installer ["/dotnet", "/usr/share/dotnet"]
 
