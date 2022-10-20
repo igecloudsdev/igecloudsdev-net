@@ -1,14 +1,14 @@
 ARG REPO=mcr.microsoft.com/dotnet/runtime-deps
 
 # Installer image
-FROM $REPO:6.0.10-alpine3.16-arm64v8 AS installer
+FROM $REPO:6.0.11-alpine3.16-arm64v8 AS installer
 
 ARG SAS_QUERY_STRING
 
 # Retrieve .NET Runtime
-RUN dotnet_version=6.0.10-servicing.22476.5 \
-    && wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-6.0.10-linux-musl-arm64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='4f00918771c56856231c715ad9f1febcdc39127ac0265c97da76375ba20cbc7109ee696dae72e5f5d8fa1998588e697a4a6785c919e96a7bda7408a500cc59e1' \
+RUN dotnet_version=6.0.11-servicing.22518.9 \
+    && wget -O dotnet.tar.gz https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Runtime/$dotnet_version/dotnet-runtime-6.0.11-linux-musl-arm64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='a9e811deb2ec6e77cbb1e8da100421abd9fbad4ce389f6126e50a3d628fb2596114039b7ee6dddc8c5e1de3888e1cb790c04b284834f84665af6c2b810b3a30f' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /dotnet \
     && tar -oxzf dotnet.tar.gz -C /dotnet \
@@ -16,10 +16,10 @@ RUN dotnet_version=6.0.10-servicing.22476.5 \
 
 
 # .NET runtime image
-FROM $REPO:6.0.10-alpine3.16-arm64v8
+FROM $REPO:6.0.11-alpine3.16-arm64v8
 
 # .NET Runtime version
-ENV DOTNET_VERSION=6.0.10-servicing.22476.5
+ENV DOTNET_VERSION=6.0.11-servicing.22518.9
 
 COPY --from=installer ["/dotnet", "/usr/share/dotnet"]
 

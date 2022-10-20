@@ -1,29 +1,29 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
 # Installer image
-FROM $REPO:6.0.10-cbl-mariner2.0-arm64v8 AS installer
+FROM $REPO:6.0.11-cbl-mariner2.0-arm64v8 AS installer
 
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN curl -fSL --output dotnet.rpm https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.402-servicing.22476.26/dotnet-sdk-6.0.402-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='a0e2fae3508bd7b746bfa8ebf2c7e458baf2a9dfdb9d3f251af89e6c506bc97094418c4ea9deb71b4fb2ff64fa372970edc40ac3ab42cb84b3b2446c262f7793' \
+RUN curl -fSL --output dotnet.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Sdk/6.0.403-servicing.22519.42/dotnet-sdk-6.0.403-aarch64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='c9e23eb5783577167d6bc6628ce46df8264f0d8d51c394067b82952565513279d50711037442e55f39a19b0c41bce8c81f64c542fe23a5314f10dbce883a4d74' \
     && echo "$dotnet_sha512  dotnet.rpm" | sha512sum -c - \
     \
-    && curl -fSL --output apphost.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$DOTNET_VERSION/dotnet-apphost-pack-6.0.10-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='97c6acdc138e42e20062e554cec4e627786e124a01a1f67843dfbfca820b1c633568b715af55686df8878bc7e0528318db01ac1b0b0472498d6cc79d6544120d' \
+    && curl -fSL --output apphost.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Runtime/$DOTNET_VERSION/dotnet-apphost-pack-6.0.11-aarch64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='1e9ef8570f48e6e64b149f31ae09ed9dd2bd184bc5cf9e404d203880e17371ab9dafb6b7f69c4d45368ae02e5932447aef3e624eb0de4e65768a6c79e6ff3291' \
     && echo "$dotnet_sha512  apphost.rpm" | sha512sum -c - \
     \
-    && curl -fSL --output targeting-pack.rpm https://dotnetbuilds.blob.core.windows.net/internal/Runtime/6.0.10-servicing.22476.5/dotnet-targeting-pack-6.0.10-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='6bf5b9b3ae34d7d06b4229379e7a7df52cb1473360c613b6c5242386dcb207f59057348dd18e39c54b245cd396c8099fa68681506087745b622335f6ca5c0b65' \
+    && curl -fSL --output targeting-pack.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Runtime/6.0.11-servicing.22518.9/dotnet-targeting-pack-6.0.11-aarch64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='91f4f4bc50c512488c4c0b4aa7ed257fdab54ccac8981873d05d50bfc4b519641a90843cc4e0cbb739e2642bfb96047f0f2a2aefc4bbcb39f2549e2ab7f32947' \
     && echo "$dotnet_sha512  targeting-pack.rpm" | sha512sum -c - \
     \
-    && curl -fSL --output aspnetcore-targeting-pack.rpm https://dotnetbuilds.blob.core.windows.net/internal/aspnetcore/Runtime/6.0.10-servicing.22476.17/aspnetcore-targeting-pack-6.0.10-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='0ed8d7bda961e05d638a85cf5f5a5dd62efc9008a43d8cd93f91d9903f0dc24676c89e2745d0aa8eeb038b0fc111da1145d29be5e3fc5cee8dce01601074a34e' \
+    && curl -fSL --output aspnetcore-targeting-pack.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/aspnetcore/Runtime/6.0.11-servicing.22518.17/aspnetcore-targeting-pack-6.0.11-aarch64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='3e32439919205e20f80d21eafde6335cb81fe87d9b303c05314780d1bcbc762f30550cfb8b139a908d08cfb501e489283a94f1b60f3e1a69ffa9cd5f7d24b6ac' \
     && echo "$dotnet_sha512  aspnetcore-targeting-pack.rpm" | sha512sum -c -
 
 
 # .NET SDK image
-FROM $REPO:6.0.10-cbl-mariner2.0-arm64v8
+FROM $REPO:6.0.11-cbl-mariner2.0-arm64v8
 
 ENV \
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -33,7 +33,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=6.0.402-servicing.22476.26 \
+    DOTNET_SDK_VERSION=6.0.403-servicing.22519.42 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

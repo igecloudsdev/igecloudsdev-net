@@ -1,23 +1,23 @@
 ARG REPO=mcr.microsoft.com/dotnet/runtime
 
 # Installer image
-FROM $REPO:6.0.10-alpine3.16-amd64 AS installer
+FROM $REPO:6.0.11-alpine3.16-amd64 AS installer
 
 ARG SAS_QUERY_STRING
 
 # Retrieve ASP.NET Core
-RUN aspnetcore_version=6.0.10-servicing.22476.17 \
-    && wget -O aspnetcore.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.10-linux-musl-x64.tar.gz$SAS_QUERY_STRING \
-    && aspnetcore_sha512='55cfa0419965dc15127fca3da0f567dd64dc4ca3981f5e3366e01f88c670f91b361548be99c507fcf9fdc51078387a230c3d09d399d7b0345ae4b6e60ae2615f' \
+RUN aspnetcore_version=6.0.11-servicing.22518.17 \
+    && wget -O aspnetcore.tar.gz https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.11-linux-musl-x64.tar.gz$SAS_QUERY_STRING \
+    && aspnetcore_sha512='b247da36041fa7920ef1def00ecfb76f343fab72f9cb07c2bf84d459a97b06dd3d018d83aa82a7cd8071f7f3794b1f2db580bbd5c170d6618e525b63c001649e' \
     && echo "$aspnetcore_sha512  aspnetcore.tar.gz" | sha512sum -c - \
     && tar -oxzf aspnetcore.tar.gz ./shared/Microsoft.AspNetCore.App \
     && rm aspnetcore.tar.gz
 
 
 # ASP.NET Core image
-FROM $REPO:6.0.10-alpine3.16-amd64
+FROM $REPO:6.0.11-alpine3.16-amd64
 
 # ASP.NET Core version
-ENV ASPNET_VERSION=6.0.10-servicing.22476.17
+ENV ASPNET_VERSION=6.0.11-servicing.22518.17
 
 COPY --from=installer ["/shared/Microsoft.AspNetCore.App", "/usr/share/dotnet/shared/Microsoft.AspNetCore.App"]

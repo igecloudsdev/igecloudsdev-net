@@ -1,12 +1,12 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
 # Installer image
-FROM $REPO:6.0.10-alpine3.16-amd64 AS installer
+FROM $REPO:6.0.11-alpine3.16-amd64 AS installer
 
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/6.0.402-servicing.22476.26/dotnet-sdk-6.0.402-linux-musl-x64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='534eb3fa37c5dc5131cc542e95c8372571690cdc404da630734e90e87a93080c7ea9ecf29d8fa1e0a956f0599007271cae4e57ac0879cc94df08ad36aba8fdcd' \
+RUN wget -O dotnet.tar.gz https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Sdk/6.0.403-servicing.22519.42/dotnet-sdk-6.0.403-linux-musl-x64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='093d26ac36c959c67332ef4c4c063219128df2db50b816f31a83fc7118b72a701334b4353c9bfb7c30e9e28d72ad36eae986a351fc7938f4b484722084446f8b' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -14,7 +14,7 @@ RUN wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sd
 
 
 # .NET SDK image
-FROM $REPO:6.0.10-alpine3.16-amd64
+FROM $REPO:6.0.11-alpine3.16-amd64
 
 ENV \
     # Unset ASPNETCORE_URLS from aspnet base image
@@ -24,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=6.0.402-servicing.22476.26 \
+    DOTNET_SDK_VERSION=6.0.403-servicing.22519.42 \
     # Disable the invariant mode (set in base image)
     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
     # Enable correct mode for dotnet watch (only mode supported in a container)

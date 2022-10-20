@@ -6,9 +6,9 @@ FROM $REPO:7.0.0-alpine3.16-arm64v8 AS installer
 ARG SAS_QUERY_STRING
 
 # Retrieve .NET Runtime
-RUN dotnet_version=7.0.0-rtm.22513.8 \
-    && wget -O dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Runtime/$dotnet_version/dotnet-runtime-7.0.0-linux-musl-arm64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='4b1687b5f5e8b77a7ce5a4d601a24e3661f4fee0560edcbedd5cbcc654f7ef37f2cbc344e015e097e17fc1a6f36d5d1257eb0547b0d28692a6a1de13a636f4bc' \
+RUN dotnet_version=7.0.0-rtm.22518.5 \
+    && wget -O dotnet.tar.gz https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22519-28-internal/Runtime/$dotnet_version/dotnet-runtime-7.0.0-linux-musl-arm64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='8e51878ff716d56366c52af7ff92375d3df796ceb56a74ff88fce6c3461003ed05be1ed6504c0d7d217afdce1097895c8df508d4c64d7fae537ff53482c3f8ca' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /dotnet \
     && tar -oxzf dotnet.tar.gz -C /dotnet \
@@ -19,7 +19,7 @@ RUN dotnet_version=7.0.0-rtm.22513.8 \
 FROM $REPO:7.0.0-alpine3.16-arm64v8
 
 # .NET Runtime version
-ENV DOTNET_VERSION=7.0.0-rtm.22513.8
+ENV DOTNET_VERSION=7.0.0-rtm.22518.5
 
 COPY --from=installer ["/dotnet", "/usr/share/dotnet"]
 

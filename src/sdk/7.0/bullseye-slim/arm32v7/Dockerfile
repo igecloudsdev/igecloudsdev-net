@@ -5,8 +5,8 @@ FROM arm32v7/buildpack-deps:bullseye-curl AS installer
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN curl -fSL --output dotnet.tar.gz https://dotnetbuilds.blob.core.windows.net/internal/Sdk/7.0.100-rtm.22518.5/dotnet-sdk-7.0.100-linux-arm.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='15f2b2b0ab6348e332059dce1064f82c3c1a9cb864d8053cd66f28b0cb2bf175c2bf165ff8ee9c8423e75feee312343b59822f22614a6879e484bc354f6d3071' \
+RUN curl -fSL --output dotnet.tar.gz https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22519-28-internal/Sdk/7.0.100-rtm.22519.28/dotnet-sdk-7.0.100-linux-arm.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='fef779c57655b93c517949d6f2d44ae17dc6a5351f2dd75ae1e385d6a1f98e5ae7e3eb66d915f8b44c81fe773abce5809b85ee1ef50dd0fa64fd26e6a0b3db82' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -24,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rtm.22518.5 \
+    DOTNET_SDK_VERSION=7.0.100-rtm.22519.28 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance
