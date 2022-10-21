@@ -7,16 +7,16 @@ ARG SAS_QUERY_STRING
 
 # Retrieve .NET Runtime
 RUN dotnet_version=7.0.0-rtm.22518.5 \
-    && curl -fSL --output dotnet-host.rpm https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22519-28-internal/Runtime/$dotnet_version/dotnet-host-7.0.0-x64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='b6f517db1d82740032c1a5bdce77246a17ecb9b2b32c9cfea23bf4d2360437d4147fb9102b93d2b2369c77681d681418d044708790c43d94f44c3c0af0f43d54' \
+    && curl -fSL --output dotnet-host.rpm https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22520-10-internal/Runtime/$dotnet_version/dotnet-host-7.0.0-x64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='8753f346744bafb9aac2c90661e4773496c6f9b85afe85962cf5b3ad4501c165d5296bb5ecd50671e24050019a369d909fc41469b9bf53ec0a5e7884b1b10c79' \
     && echo "$dotnet_sha512  dotnet-host.rpm" | sha512sum -c - \
     \
-    && curl -fSL --output dotnet-hostfxr.rpm https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22519-28-internal/Runtime/$dotnet_version/dotnet-hostfxr-7.0.0-x64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='7d440b4e6563be8b5bf8abf1f5c33bc5ad22f9c8b3ad57fac946f2f0db182b254cc9ae37e54a51c401f647935bac62746f3019a399864d9d3d1c6b3c97062cda' \
+    && curl -fSL --output dotnet-hostfxr.rpm https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22520-10-internal/Runtime/$dotnet_version/dotnet-hostfxr-7.0.0-x64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='6a2a0d927feb44b863eb2c9414676a412bca86eeeae9a755efa1ea172f3711bbd7d09da3d983e31e367595bad18365d43830e3c41c3bc902a5a6a5cf0d047f45' \
     && echo "$dotnet_sha512  dotnet-hostfxr.rpm" | sha512sum -c - \
     \
-    && curl -fSL --output dotnet-runtime.rpm https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22519-28-internal/Runtime/$dotnet_version/dotnet-runtime-7.0.0-x64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='5b051b198fafe01c8613c649c3ee2046ac177c2178ddfa7a69b28354f26a5da1e5d94403f352c7fcba7f7698a3e2960f120427628ccf6b20d5dfd5f6a2474837' \
+    && curl -fSL --output dotnet-runtime.rpm https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22520-10-internal/Runtime/$dotnet_version/dotnet-runtime-7.0.0-x64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='1b8698127377b3b4c5a7bb2be7c7d7534e55fc01c9d82f6c670c72747b53a9cb5f78ea3b89ea43e99c7c5ddd6f918dc1dd13707958b96731688a1df01d8e4a4b' \
     && echo "$dotnet_sha512  dotnet-runtime.rpm" | sha512sum -c -
 
 

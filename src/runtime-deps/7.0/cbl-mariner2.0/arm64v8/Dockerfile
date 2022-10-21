@@ -4,8 +4,8 @@ FROM mcr.microsoft.com/cbl-mariner/base/core:2.0 AS installer
 ARG SAS_QUERY_STRING
 
 RUN dotnet_version=7.0.0-rtm.22518.5 \
-    && curl -fSL --output dotnet-runtime-deps.rpm https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22519-28-internal/Runtime/$dotnet_version/dotnet-runtime-deps-7.0.0-cm.2-aarch64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='d02fd1e1bbb7f3ec80bd780fe833a79ffa2a1da1909236f1345259577d741490ba95d83f3d88aea35cf48e577b98d3c762f6208f93de18c825ea88b5d07da202' \
+    && curl -fSL --output dotnet-runtime-deps.rpm https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22520-10-internal/Runtime/$dotnet_version/dotnet-runtime-deps-7.0.0-cm.2-aarch64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='0c0e53a4beb4bb4aaad671eac89dfdd879c81be9c55c76980f7e7a235e8744c708c2a7284f70db37fce45e2b7b737c5cf4a722b0f97f11f4e23b13871fa39f64' \
     && echo "$dotnet_sha512  dotnet-runtime-deps.rpm" | sha512sum -c -
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0
 

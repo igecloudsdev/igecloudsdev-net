@@ -7,7 +7,7 @@ ARG SAS_QUERY_STRING
 
 # Retrieve .NET Runtime
 RUN dotnet_version=7.0.0-rtm.22518.5 \
-    && curl -fSL --output dotnet.tar.gz https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22519-28-internal/Runtime/$dotnet_version/dotnet-runtime-7.0.0-linux-arm64.tar.gz$SAS_QUERY_STRING \
+    && curl -fSL --output dotnet.tar.gz https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22520-10-internal/Runtime/$dotnet_version/dotnet-runtime-7.0.0-linux-arm64.tar.gz$SAS_QUERY_STRING \
     && dotnet_sha512='a359402471c0c4f11f9e472ee6f8d7d165b57a29f132e01a95d3ee4020fa27f9c6ed5ede4b41786fd9bbad1491a4726c6f45d105c19695c0a1cc9a9d414ee614' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
