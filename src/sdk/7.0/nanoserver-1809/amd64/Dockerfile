@@ -27,9 +27,9 @@ RUN powershell -Command " `
         $ProgressPreference = 'SilentlyContinue'; `
         `
         # Retrieve .NET SDK
-        $sdk_version = '7.0.100-rtm.22520.10'; `
-        Invoke-WebRequest -OutFile dotnet.zip https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22520-10-internal/Sdk/$sdk_version/dotnet-sdk-7.0.100-win-x64.zip$Env:SAS_QUERY_STRING; `
-        $dotnet_sha512 = 'bd8432471cf7d888b685d34083c17897243cefeb45c1c15c4232fdd5b5666769cba7c3df6ea2a269d1d26f2f33db26d24626d82ca559498f0f3399c2c3b6b449'; `
+        $sdk_version = '7.0.100-rtm.22521.12'; `
+        Invoke-WebRequest -OutFile dotnet.zip https://dotnetstage.blob.core.windows.net/7-0-100-rtm-22521-12-internal/Sdk/$sdk_version/dotnet-sdk-7.0.100-win-x64.zip$Env:SAS_QUERY_STRING; `
+        $dotnet_sha512 = 'e77fa3501f6945dd5730dbcec7632f070314717c6abfa95f95e13db53bfd55d2f46faa45809f796535749c8d98251828a4b4ab4d5ceb3ee1daa5262c6907f906'; `
         if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -71,7 +71,7 @@ ENV `
     # Do not show first run text
     DOTNET_NOLOGO=true `
     # SDK version
-    DOTNET_SDK_VERSION=7.0.100-rtm.22520.10 `
+    DOTNET_SDK_VERSION=7.0.100-rtm.22521.12 `
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true `
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance
