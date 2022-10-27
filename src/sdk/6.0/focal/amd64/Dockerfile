@@ -5,8 +5,8 @@ FROM amd64/buildpack-deps:focal-curl AS installer
 ARG SAS_QUERY_STRING
 
 # Install .NET SDK
-RUN curl -fSL --output dotnet.tar.gz https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Sdk/6.0.403-servicing.22519.42/dotnet-sdk-6.0.403-linux-x64.tar.gz$SAS_QUERY_STRING \
-    && dotnet_sha512='9b128f045e99f09a1e80b560aef275a5b80b7e505b75f5bc3319d380c92f93631f97f814cb80faa6f042ed2583cb306e231e3a5a05de6ace8a270b9e5b401d0b' \
+RUN curl -fSL --output dotnet.tar.gz https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22524-2-internal/Sdk/6.0.403-servicing.22524.2/dotnet-sdk-6.0.403-linux-x64.tar.gz$SAS_QUERY_STRING \
+    && dotnet_sha512='779b3e24a889dbb517e5ff5359dab45dd3296160e4cb5592e6e41ea15cbf87279f08405febf07517aa02351f953b603e59648550a096eefcb0a20fdaf03fadde' \
     && echo "$dotnet_sha512  dotnet.tar.gz" | sha512sum -c - \
     && mkdir -p /usr/share/dotnet \
     && tar -oxzf dotnet.tar.gz -C /usr/share/dotnet ./packs ./sdk ./sdk-manifests ./templates ./LICENSE.txt ./ThirdPartyNotices.txt \
@@ -24,7 +24,7 @@ ENV \
     # Do not show first run text
     DOTNET_NOLOGO=true \
     # SDK version
-    DOTNET_SDK_VERSION=6.0.403-servicing.22519.42 \
+    DOTNET_SDK_VERSION=6.0.403-servicing.22524.2 \
     # Enable correct mode for dotnet watch (only mode supported in a container)
     DOTNET_USE_POLLING_FILE_WATCHER=true \
     # Skip extraction of XML docs - generally not useful within an image/container - helps performance

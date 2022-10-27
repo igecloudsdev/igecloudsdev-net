@@ -12,9 +12,9 @@ RUN powershell -Command `
         $ErrorActionPreference = 'Stop'; `
         $ProgressPreference = 'SilentlyContinue'; `
         `
-        $aspnetcore_version = '6.0.11-servicing.22518.17'; `
-        Invoke-WebRequest -OutFile aspnetcore.zip https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.11-win-x64.zip$Env:SAS_QUERY_STRING; `
-        $aspnetcore_sha512 = '8826e628873be30e5f6229ceedfb94605e04be14cdad53707f82ba8b2ae59643c47144464d5efc0e3f9442ebaf4487e8f35b605692f71f7dae2ae412df61cde8'; `
+        $aspnetcore_version = '6.0.11-servicing.22523.4'; `
+        Invoke-WebRequest -OutFile aspnetcore.zip https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22524-2-internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.11-win-x64.zip$Env:SAS_QUERY_STRING; `
+        $aspnetcore_sha512 = 'd577c00083aa6d85cd6bd92747676285f2a064730f81ad77ce061808f97cf1c5911b130b6b4da0cf83626fc970f8467a7f6361a069ccc2f47bcd9859f654c1fb'; `
         if ((Get-FileHash aspnetcore.zip -Algorithm sha512).Hash -ne $aspnetcore_sha512) { `
             Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
             exit 1; `
@@ -29,6 +29,6 @@ RUN powershell -Command `
 FROM $REPO:6.0.11-windowsservercore-ltsc2019
 
 # ASP.NET Core version
-ENV ASPNET_VERSION=6.0.11-servicing.22518.17
+ENV ASPNET_VERSION=6.0.11-servicing.22523.4
 
 COPY --from=installer ["/dotnet/shared/Microsoft.AspNetCore.App", "/Program Files/dotnet/shared/Microsoft.AspNetCore.App"]

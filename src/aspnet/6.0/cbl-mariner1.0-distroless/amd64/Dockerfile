@@ -10,9 +10,9 @@ RUN tdnf install -y \
     && tdnf clean all
 
 # Retrieve ASP.NET Core
-RUN aspnetcore_version=6.0.11-servicing.22518.17 \
-    && curl -fSL --output aspnetcore.tar.gz https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.11-linux-x64.tar.gz$SAS_QUERY_STRING \
-    && aspnetcore_sha512='d771a753302ce6444bd36c009626c9cf3564bf6e6d3d9ccbe7d73cda802fbaa0d021f6e6064e254279cdcd6b2c10cca4856dbccd9d5373c99b697b0a107e675e' \
+RUN aspnetcore_version=6.0.11-servicing.22523.4 \
+    && curl -fSL --output aspnetcore.tar.gz https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22524-2-internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.11-linux-x64.tar.gz$SAS_QUERY_STRING \
+    && aspnetcore_sha512='12a30719aacd5b3dd444d075c13966a4bb1dc149c36bcbc0e685730f08d1c75eb3929749b89a88569ddb48bd8104db84aaee2ee097ac3a5fe6fff60c9f09f741' \
     && echo "$aspnetcore_sha512  aspnetcore.tar.gz" | sha512sum -c - \
     && mkdir -p /dotnet \
     && tar -oxzf aspnetcore.tar.gz -C /dotnet ./shared/Microsoft.AspNetCore.App \
@@ -23,6 +23,6 @@ RUN aspnetcore_version=6.0.11-servicing.22518.17 \
 FROM $REPO:6.0.11-cbl-mariner1.0-distroless-amd64
 
 # ASP.NET Core version
-ENV ASPNET_VERSION=6.0.11-servicing.22518.17
+ENV ASPNET_VERSION=6.0.11-servicing.22523.4
 
 COPY --from=installer ["/dotnet", "/usr/share/dotnet"]

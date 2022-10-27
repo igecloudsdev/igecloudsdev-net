@@ -6,17 +6,17 @@ FROM $REPO:6.0.11-cbl-mariner1.0-amd64 AS installer
 ARG SAS_QUERY_STRING
 
 # Retrieve .NET Runtime
-RUN dotnet_version=6.0.11-servicing.22518.9 \
-    && curl -fSL --output dotnet-host.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Runtime/$dotnet_version/dotnet-host-6.0.11-x64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='ab202c1ab35cc2ae9c197f746ca095a7003a274c4af7cc4efb0934507b4c45289c865493d5c29331f490f843f4c688f9802fa53bedb8f4dfa9250e066daa1d1e' \
+RUN dotnet_version=6.0.11-servicing.22523.4 \
+    && curl -fSL --output dotnet-host.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22524-2-internal/Runtime/$dotnet_version/dotnet-host-6.0.11-x64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='75901f40eb9ae528d8cf7ae20a14ba092e05d1eccac0b0df87492553fb96c8fe67fe7eed902286324b4ee0a4f68c8fc541a859f3a0a4fbc72bd02cc1ad7d90ce' \
     && echo "$dotnet_sha512  dotnet-host.rpm" | sha512sum -c - \
     \
-    && curl -fSL --output dotnet-hostfxr.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Runtime/$dotnet_version/dotnet-hostfxr-6.0.11-x64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='6487b88c4e1e3752c1e2486e3efc7c176ebe72f396a908b5516fbeb777e245ca36ee1cb0e764edeed7aee9cb5b8fef519be6b53197b9f5927e9459d30fb0dd74' \
+    && curl -fSL --output dotnet-hostfxr.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22524-2-internal/Runtime/$dotnet_version/dotnet-hostfxr-6.0.11-x64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='4e289c27a94bd0571105bd4b6433031c8cc8d5cca191089906e350222b86ab38960f4c39c59e8a6b0227fe6194d0bb2ab45c969a9688e60bdfbb132c39a855b2' \
     && echo "$dotnet_sha512  dotnet-hostfxr.rpm" | sha512sum -c - \
     \
-    && curl -fSL --output dotnet-runtime.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/Runtime/$dotnet_version/dotnet-runtime-6.0.11-x64.rpm$SAS_QUERY_STRING \
-    && dotnet_sha512='592bd8390779bf899a3a101d46bbb96833b2683f204a3deb10fa054ab3e76dd15a78094802f8da2e761bdc164c35c688e65f05c91bdab532c899540fcf197586' \
+    && curl -fSL --output dotnet-runtime.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22524-2-internal/Runtime/$dotnet_version/dotnet-runtime-6.0.11-x64.rpm$SAS_QUERY_STRING \
+    && dotnet_sha512='12950dfaacc42cc187b0610176a4247dc49cb8b4f333978a00a8f4a70e3e1cf0af1142d1efc8df9d4a089c488529bfa22c37d6bdfb953b609cba7b6e7a7e3170' \
     && echo "$dotnet_sha512  dotnet-runtime.rpm" | sha512sum -c -
 
 
@@ -24,7 +24,7 @@ RUN dotnet_version=6.0.11-servicing.22518.9 \
 FROM $REPO:6.0.11-cbl-mariner1.0-amd64
 
 # .NET Runtime version
-ENV DOTNET_VERSION=6.0.11-servicing.22518.9
+ENV DOTNET_VERSION=6.0.11-servicing.22523.4
 
 COPY --from=installer /dotnet-host.rpm /dotnet-host.rpm
 COPY --from=installer /dotnet-hostfxr.rpm /dotnet-hostfxr.rpm

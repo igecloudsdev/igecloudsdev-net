@@ -6,9 +6,9 @@ FROM $REPO:6.0.11-cbl-mariner2.0-arm64v8 AS installer
 ARG SAS_QUERY_STRING
 
 # Retrieve ASP.NET Core
-RUN aspnetcore_version=6.0.11-servicing.22518.17 \
-    && curl -fSL --output aspnetcore.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22519-42-internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.11-aarch64.rpm$SAS_QUERY_STRING \
-    && aspnetcore_sha512='d3336e9da99e2f2d8dc2182bca8d62fc9f3dd8b241e36b12551ce855ce0fcec22b7876d8e248ed3c62178e0580fbabf8c49dc73183f113318153273e48f58b0e' \
+RUN aspnetcore_version=6.0.11-servicing.22523.4 \
+    && curl -fSL --output aspnetcore.rpm https://dotnetstage.blob.core.windows.net/6-0-403-servicing-22524-2-internal/aspnetcore/Runtime/$aspnetcore_version/aspnetcore-runtime-6.0.11-aarch64.rpm$SAS_QUERY_STRING \
+    && aspnetcore_sha512='b1b33c92a068e1d629873f54355e9da3e18410c0e3452248b3a8f5fc074d8ace32616a7f703af48a274871545287f723ae971fba9a379cd39b1003f5b348b6e8' \
     && echo "$aspnetcore_sha512  aspnetcore.rpm" | sha512sum -c -
 
 
@@ -16,7 +16,7 @@ RUN aspnetcore_version=6.0.11-servicing.22518.17 \
 FROM $REPO:6.0.11-cbl-mariner2.0-arm64v8
 
 # ASP.NET Core version
-ENV ASPNET_VERSION=6.0.11-servicing.22518.17
+ENV ASPNET_VERSION=6.0.11-servicing.22523.4
 
 COPY --from=installer /aspnetcore.rpm /aspnetcore.rpm
 
