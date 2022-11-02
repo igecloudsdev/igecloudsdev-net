@@ -14,6 +14,3 @@ variables:
   value: private
 - name: gitHubVersionsRepoInfo.path
   value: image-infos
-${{ if variables['Agent.OS'] == 'Linux' }}:
-  - name: build.imageBuilderDockerRunExtraOptions
-    value: --entrypoint dotnet-dotnet-docker/eng/imagebuilder-build-internal.sh -e MSINT_SERVICEPRINCIPALNAME -e MSINT_SERVICEPRINCIPALTENANT -e APP_DOTNETDOCKERMSINTREGISTRY_CLIENT_SECRET

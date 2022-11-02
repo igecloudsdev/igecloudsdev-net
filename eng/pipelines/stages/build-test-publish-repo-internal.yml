@@ -3,14 +3,28 @@ parameters:
   publicProjectName: null
 
 stages:
-- template: stages/build-test-publish-repo.yml
+- template: build-test-publish-repo.yml
   parameters:
     internalProjectName: ${{ parameters.internalProjectName }}
     publicProjectName: ${{ parameters.publicProjectName }}
-    ${{ if variables['Agent.OS'] == 'Windows' }}:
-      customBuildInitSteps:
-      - script: $(engPath)/Connect-MsInt.ps1
-        displayName: Log into internal ACR
-      customBuildCleanupSteps:
-      - script: $(engPath)/Disconnect-MsInt.ps1
-        displayName: Log out of internal ACR
+    customBuildInitSteps:
+    - script: |
+        echo "##vso[task.setvariable variable=imageNames.imageBuilder]$(imageNames.imageBuilderName)-az"
+        echo "##vso[task.setvariable variable=build.imageBuilderDockerRunExtraOptions]--entrypoint dotnet-dotnet-docker/eng/imagebuilder-build-internal.sh -e MSINT_SERVICEPRINCIPALNAME -e MSINT_SERVICEPRINCIPALTENANT -e APP_DOTNETDOCKERMSINTREGISTRY_CLIENT_SECRET"
+      displayName: Set up internal build variables
+      condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
+    - powershell: |
+        if (-not [bool](Get-Command -Name "az" -ErrorAction SilentlyContinue)) {
+          Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi
+          Start-Process msiexec.exe -Wait -ArgumentList "/I AzureCLI.msi /quiet"
+          echo "##vso[task.prependpath]C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
+        }
+      displayName: Install AZ CLI
+      condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
+    - powershell: $(engPath)/Connect-MsInt.ps1 -ServicePrincipalName $(msint.servicePrincipalName) -ServicePrincipalTenant $(msint.servicePrincipalTenant) -ServicePrincipalSecret $(app-DotnetDockerMsIntRegistry-client-secret)
+      displayName: Log into internal ACR
+      condition: and(succeeded(), eq(variables['Agent.OS'], 'Windows_NT'))
+    customBuildCleanupSteps:
+    - powershell: $(engPath)/Disconnect-MsInt.ps1
+      displayName: Log out of internal ACR
+      condition: and(always(), eq(variables['Agent.OS'], 'Windows_NT'))   

@@ -22,15 +22,22 @@ jobs:
     matrix: $[ ${{ parameters.matrix }} ]
   timeoutInMinutes: ${{ parameters.buildJobTimeout }}
   variables:
-    imageBuilderDockerRunExtraOptions: $(build.imageBuilderDockerRunExtraOptions)
-    versionsRepoPath: versions
-    sbomDirectory: $(Build.ArtifactStagingDirectory)/sbom
-    ${{ if eq(parameters.noCache, false) }}:
-      versionsBasePath: $(versionsRepoPath)/
-      pipelineDisabledCache: false
-    ${{ if eq(parameters.noCache, true) }}:
-      versionsBasePath: ""
-      pipelineDisabledCache: true
+  - name: imageBuilderDockerRunExtraOptions
+    value: $(build.imageBuilderDockerRunExtraOptions)
+  - name: versionsRepoPath
+    value: versions
+  - name: sbomDirectory
+    value: $(Build.ArtifactStagingDirectory)/sbom
+  - ${{ if eq(parameters.noCache, false) }}:
+    - name: versionsBasePath
+      value: $(versionsRepoPath)/
+    - name: pipelineDisabledCache
+      value: false
+  - ${{ else }}:
+    - name: versionsBasePath
+      value: ""
+    - name: pipelineDisabledCache
+      value: true
   steps:
   - checkout: self
   - ${{ if and(eq(variables['System.TeamProject'], parameters.publicProjectName), eq(parameters.noCache, false)) }}:
@@ -74,8 +81,8 @@ jobs:
       }
       echo "##vso[task.setvariable variable=baseContainerRepoPath]$baseContainerRepoPath"
     displayName: Set Base Container Repo Path
-  - template: ${{ format('../steps/init-docker-{0}.yml', parameters.dockerClientOS) }}
   - ${{ parameters.customInitSteps }}
+  - template: ${{ format('../steps/init-docker-{0}.yml', parameters.dockerClientOS) }}
   - template: ../steps/set-image-info-path-var.yml
     parameters:
       publicSourceBranch: $(publicSourceBranch)

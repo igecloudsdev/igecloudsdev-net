@@ -3,7 +3,7 @@ parameters:
   condition: true
 
 steps:
-- template: init-common.yml
+- template: set-source-branch-var.yml
   parameters:
     condition: ${{ parameters.condition }}
 - powershell: echo "##vso[task.setvariable variable=artifactsPath]$(Build.ArtifactStagingDirectory)"

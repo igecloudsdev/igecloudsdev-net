@@ -6,6 +6,9 @@ parameters:
   internalProjectName: null
   publicProjectName: null
   linuxAmd64Pool: ""
+  customBuildInitSteps: []
+  customBuildCleanupSteps: []
+  customBuildVariables: []
 
 stages:
 - template: ../../common/templates/stages/dotnet/build-test-publish-repo.yml
@@ -23,6 +26,7 @@ stages:
 
     # Template paths must be relative to the YAML job that executes them
     customBuildInitSteps:
+    - ${{ parameters.customBuildInitSteps }}
     - template: ../../../pipelines/steps/set-imagebuilder-build-args-var.yml
     - template: ../../../pipelines/steps/set-public-source-branch-var.yml
     - powershell: |
@@ -35,6 +39,8 @@ stages:
         echo "##vso[task.setvariable variable=app_DotnetDockerMsIntRegistry_client_secret]$(app-DotnetDockerMsIntRegistry-client-secret)"
       displayName: Set Custom Build Variables
     - template: ../../../pipelines/steps/set-custom-test-variables.yml
+    customBuildCleanupSteps: ${{ parameters.customBuildCleanupSteps }}
+    customBuildVariables: ${{ parameters.customBuildVariables }}
     customTestInitSteps:
     - template: ../../../pipelines/steps/set-custom-test-variables.yml
     customPublishInitSteps:

@@ -24,12 +24,12 @@ jobs:
   - ${{ parameters.customPublishVariables }}
   steps:
   - template: ../steps/retain-build.yml
+  - ${{ parameters.customInitSteps }}
   - template: ../steps/init-docker-linux.yml
   - pwsh: |
       $azdoOrgName = Split-Path -Leaf $Env:SYSTEM_COLLECTIONURI
       echo "##vso[task.setvariable variable=azdoOrgName]$azdoOrgName"
     displayName: Set Publish Variables
-  - ${{ parameters.customInitSteps }}
   - template: ../steps/validate-branch.yml
     parameters:
       internalProjectName: ${{ parameters.internalProjectName }}
