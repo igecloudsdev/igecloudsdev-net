@@ -3,6 +3,7 @@
     set baseUrl to VARIABLES[cat("base-url|", dotnetVersion, "|", VARIABLES["branch"])] ^
     set isInternal to find(baseUrl, "msrc") >= 0 || find(baseUrl, "internal") >= 0 ^
     set isSingleStage to (find(OS_VERSION, "windowsservercore") >= 0 && !isInternal) ^
+    set registry to when(isInternal, "msint.azurecr.io/private", "mcr.microsoft.com") ^
     set runtimeBaseTag to cat("$REPO:", VARIABLES[cat("dotnet|", dotnetVersion, "|product-version")], "-", OS_VERSION)
 }}# escape=`
 
@@ -21,7 +22,7 @@ ARG REPO=mcr.microsoft.com/dotnet/runtime
     _ MULTI STAGE
 
 }}# Installer image
-FROM mcr.microsoft.com/windows/servercore:{{OS_VERSION_NUMBER}}-amd64 AS installer
+FROM {{registry}}/windows/servercore:{{OS_VERSION_NUMBER}}-amd64 AS installer
 {{if isInternal:
 ARG SAS_QUERY_STRING
 }}

@@ -3,7 +3,7 @@
 ARG REPO=mcr.microsoft.com/dotnet/aspnet
 
 # Installer image
-FROM mcr.microsoft.com/windows/servercore:ltsc2022-amd64 AS installer
+FROM msint.azurecr.io/private/windows/servercore:ltsc2022-amd64 AS installer
 
 ARG SAS_QUERY_STRING
 

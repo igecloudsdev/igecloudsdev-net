@@ -4,7 +4,8 @@
     set baseUrl to VARIABLES[cat("base-url|", dotnetVersion, "|", VARIABLES["branch"])] ^
     set isInternal to find(baseUrl, "msrc") >= 0 || find(baseUrl, "internal") >= 0 ^
     set isSingleStage to (find(OS_VERSION, "windowsservercore") >= 0 && !isInternal) ^
-    set serverCoreBaseTag to cat("mcr.microsoft.com/windows/servercore:", OS_VERSION_NUMBER, "-amd64") ^
+    set registry to when(isInternal, "msint.azurecr.io/private", "mcr.microsoft.com") ^
+    set serverCoreBaseTag to cat(registry, "/windows/servercore:", OS_VERSION_NUMBER, "-amd64") ^
     set finalStageBaseRepo to when(isInternal && isServerCore, "servercore", "nanoserver")
 }}# escape=`
 
@@ -40,7 +41,7 @@ ARG SAS_QUERY_STRING
 
 
 # Runtime image
-FROM mcr.microsoft.com/windows/{{finalStageBaseRepo}}:{{OS_VERSION_NUMBER}}-amd64
+FROM {{registry}}/windows/{{finalStageBaseRepo}}:{{OS_VERSION_NUMBER}}-amd64
 
 {{InsertTemplate("../Dockerfile.common-dotnet-envs")}}{{if dotnetVersion != "3.1": `
     {{InsertTemplate("Dockerfile.envs", [], "    ")}}}}
